@@ -310,8 +310,8 @@
         <field name="name">object._get_custom_report_name()</field>
         <field name="model">purchase.order</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">al_base.custom_purchase_order</field>
-        <field name="report_file">al_base.custom_purchase_order</field>
+        <field name="report_name">trn_base.custom_purchase_order</field>
+        <field name="report_file">trn_base.custom_purchase_order</field>
         <field name="binding_model_id" ref="sale_purchase.model_purchase_order"/>
         <field name="binding_type">report</field>
         <field name="paperformat_id" ref="paper_format_letter_custom"/>
