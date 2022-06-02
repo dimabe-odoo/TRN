@@ -8,9 +8,9 @@ class StockMoveLine(models.Model):
   product_total_cost = fields.Float('Costo Total')
 
   def _action_done(self):
-    res = super(StockMoveLine, self)._action_done()
-    self.write({
-        'product_unit_cost': self.product_id.standard_price,
-        'product_total_cost': self.product_id.standard_price * self.qty_done
-    })
-    return res
+    for item in self:
+      item.write({
+          'product_unit_cost': item.product_id.standard_price,
+          'product_total_cost': item.product_id.standard_price * item.qty_done
+      })
+    return super(StockMoveLine, self)._action_done()
