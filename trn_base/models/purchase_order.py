@@ -10,7 +10,8 @@ class PurchaseOrder(models.Model):
 
     def _get_custom_report_name(self):
         return '%s %s' % ('Órden de Compra - ', self.name)
-
+    
+    @api.model
     def create(self, values):
         values['notes'] = 'Estimado proveedor, favor realizar el envío de facturas al correo: Recepcionfacturas@trn.cl'
         res = super(PurchaseOrder, self).create(values)
