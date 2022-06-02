@@ -7,6 +7,8 @@
           <field name="arch" type="xml">
               <xpath expr="//field[@name='company_id']" position="before">
                   <field name="analytic_account"/>
+                  <field name="product_unit_cost" />
+                  <field name="product_total_cost" />
               </xpath>
           </field>
       </record>

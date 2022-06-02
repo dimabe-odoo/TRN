@@ -8,8 +8,6 @@
                 <xpath expr="//field[@name='product_id']"
                        position="after">
                     <field name="analytic_account" />
-                    <field name="product_unit_cost" />
-                    <field name="product_total_cost" />
                 </xpath>
             </field>
         </record>
