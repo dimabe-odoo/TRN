@@ -1,3 +1,3 @@
 
 from . import purchase_order
-from . import StockMoveLine
+from . import stock_move_line
