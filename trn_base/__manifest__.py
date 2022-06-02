@@ -27,6 +27,7 @@
         # 'security/ir.model.access.csv',
         'reports/purchase_order.xml',
         'views/stock_move_line.xml',
+        'views/stock_picking.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
