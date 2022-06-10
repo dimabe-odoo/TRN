@@ -30,10 +30,10 @@
                                         <br/>
                                         <span t-field="res_company.website"/>
                                     </td>
-<!--                                    <td style="width: 10%;">-->
-<!--                                        <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.certificate_logo)"-->
-<!--                                             style="max-width: 100px; max-height: 60px"/>-->
-<!--                                    </td>-->
+                                    <!--                                    <td style="width: 10%;">-->
+                                    <!--                                        <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.certificate_logo)"-->
+                                    <!--                                             style="max-width: 100px; max-height: 60px"/>-->
+                                    <!--                                    </td>-->
                                 </tr>
                             </table>
                         </div>
@@ -145,6 +145,13 @@
                                         </t>
                                     </t>
                                 </td>
+                                <td style="text-align:left;">
+                                    <strong>LUGAR DE ENTREGA :</strong>
+                                </td>
+                                <td>
+                                    <span t-esc="d.picking_type_id.warehouse_id.partner_id.street"/> ,
+                                    <span t-field="d.picking_type_id.warehouse_id.partner_id.commune_id"/>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -201,13 +208,13 @@
                     <div style="margin-top: 4px; width:100%; min-height:100px; border:1px solid; border-radius: 5px;">
                         <div style="width:50%; min-height:100px; float:left;padding-top:2px;">
                             <table style="font-size:11px; padding: 6px;" cellspacing="0">
-<!--                                <tr>-->
-<!--                                    <th style="text-align: left;">FECHA DE ENTREGA</th>-->
-<!--                                    <td style="width: 5px">:</td>-->
-<!--                                    <td>-->
-<!--                                        <span t-field="d.date_delivered"/>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
+                                <!--                                <tr>-->
+                                <!--                                    <th style="text-align: left;">FECHA DE ENTREGA</th>-->
+                                <!--                                    <td style="width: 5px">:</td>-->
+                                <!--                                    <td>-->
+                                <!--                                        <span t-field="d.date_delivered"/>-->
+                                <!--                                    </td>-->
+                                <!--                                </tr>-->
                                 <tr>
                                     <th style="text-align: left;">COND. DE VENTA</th>
                                     <td>:</td>
@@ -306,17 +313,23 @@
         <field name="dpi">90</field>
     </record>
 
-    <record id="action_custom_label_product_template_barcode" model="ir.actions.report">
-        <field name="name">Orden de Compra</field>
-        <field name="model">purchase.order</field>
-        <field name="report_type">qweb-pdf</field>
+<!--    <record id="action_custom_label_product_template_barcode" model="ir.actions.report">-->
+<!--        <field name="name">Orden de Compra</field>-->
+<!--        <field name="model">purchase.order</field>-->
+<!--        <field name="report_type">qweb-pdf</field>-->
+<!--        <field name="report_name">trn_base.custom_purchase_order</field>-->
+<!--        <field name="report_file">trn_base.custom_purchase_order</field>-->
+<!--        <field name="binding_model_id" ref="sale_purchase.model_purchase_order"/>-->
+<!--        <field name="binding_type">report</field>-->
+
+<!--    </record>-->
+
+
+    <record id="purchase.action_report_purchase_order" model="ir.actions.report">
         <field name="report_name">trn_base.custom_purchase_order</field>
         <field name="report_file">trn_base.custom_purchase_order</field>
-        <field name="binding_model_id" ref="sale_purchase.model_purchase_order"/>
-        <field name="binding_type">report</field>
         <field name="paperformat_id" ref="paper_format_letter_custom"/>
     </record>
-
     <!--    <report id="action_custom_purchase_order" string="Órden de Compra Custom" model="purchase.order"-->
     <!--            report_type="qweb-pdf"-->
     <!--            name="al_base.custom_purchase_order" menu="True" paperformat="paper_format_letter_custom"-->
