@@ -34,5 +34,6 @@ class StockMoveLine(models.Model):
                         'company_id': self.env.user.company_id.id,
                     })
                     vals_list['lot_id'] = lot_id.id
+                    vals_list['lot_name'] = lot_id.name
         res = super(StockMoveLine, self).create(vals_list)
         return res
