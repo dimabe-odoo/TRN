@@ -10,9 +10,7 @@
                   <field name="product_unit_cost" />
                   <field name="product_total_cost" />
               </xpath>
-              <xpath expr="//field[@name='lot_name']" position="attributes">
-                  <attribute name="readonly">1</attribute>
-              </xpath>
+
           </field>
       </record>
     </data>

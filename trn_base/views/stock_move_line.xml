@@ -11,6 +11,9 @@
                     <field name="analytic_account"
                            attrs="{'required': [('picking_code','=','outgoing')],'invisible': [('picking_code','!=','outgoing')]}"/>
                 </xpath>
+                <xpath expr="//field[@name='lot_name']" position="attributes">
+                  <attribute name="readonly">1</attribute>
+              </xpath>
             </field>
         </record>
     </data>
