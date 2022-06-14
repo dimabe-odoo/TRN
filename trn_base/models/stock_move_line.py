@@ -21,13 +21,16 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals_list):
-        last_lot_id = get_last_lot()
-        if last_lot_id:
-            lot_id = self.env['stock.production.lot'].sudo().create({
-                'name': last_lot_id,
-                'product_id': vals_list['product_id'],
-                'company_id': self.env.user.company_id.id,
-            })
-            vals_list['lot_id'] = lot_id.id
+        if 'picking_id' in vals_list.keys():
+            picking_id = self.env['stock.picking'].search([('id','=',vals_list['picking_id'])])
+            if picking_id.picking_type_id.code == 'incoming':
+                last_lot_id = get_last_lot()
+                if last_lot_id:
+                    lot_id = self.env['stock.production.lot'].sudo().create({
+                        'name': last_lot_id,
+                        'product_id': vals_list['product_id'],
+                        'company_id': self.env.user.company_id.id,
+                    })
+                    vals_list['lot_id'] = lot_id.id
         res = super(StockMoveLine, self).create(vals_list)
         return res
