@@ -149,7 +149,8 @@
                                     <strong>LUGAR DE ENTREGA :</strong>
                                 </td>
                                 <td>
-                                    <span t-esc="d.picking_type_id.warehouse_id.partner_id.street"/> ,
+                                    <span t-esc="d.picking_type_id.warehouse_id.partner_id.street"/>
+                                    ,
                                     <span t-field="d.picking_type_id.warehouse_id.partner_id.commune_id"/>
                                 </td>
                             </tr>
@@ -313,27 +314,15 @@
         <field name="dpi">90</field>
     </record>
 
-<!--    <record id="action_custom_label_product_template_barcode" model="ir.actions.report">-->
-<!--        <field name="name">Orden de Compra</field>-->
-<!--        <field name="model">purchase.order</field>-->
-<!--        <field name="report_type">qweb-pdf</field>-->
-<!--        <field name="report_name">trn_base.custom_purchase_order</field>-->
-<!--        <field name="report_file">trn_base.custom_purchase_order</field>-->
-<!--        <field name="binding_model_id" ref="sale_purchase.model_purchase_order"/>-->
-<!--        <field name="binding_type">report</field>-->
-
-<!--    </record>-->
-
-
     <record id="purchase.action_report_purchase_order" model="ir.actions.report">
         <field name="report_name">trn_base.custom_purchase_order</field>
         <field name="report_file">trn_base.custom_purchase_order</field>
         <field name="paperformat_id" ref="paper_format_letter_custom"/>
     </record>
-    <!--    <report id="action_custom_purchase_order" string="Órden de Compra Custom" model="purchase.order"-->
-    <!--            report_type="qweb-pdf"-->
-    <!--            name="al_base.custom_purchase_order" menu="True" paperformat="paper_format_letter_custom"-->
-    <!--            groups="al_base.custom_templates"-->
-    <!--            print_report_name="object._get_custom_report_name()"-->
-    <!--    />-->
+
+    <record id="purchase.report_purchase_quotation" model="ir.actions.report">
+        <field name="report_name">trn_base.custom_purchase_order</field>
+        <field name="report_file">trn_base.custom_purchase_order</field>
+        <field name="paperformat_id" ref="paper_format_letter_custom"/>
+    </record>
 </odoo>
