@@ -10,7 +10,6 @@
                   <field name="product_unit_cost" />
                   <field name="product_total_cost" />
               </xpath>
-
           </field>
       </record>
     </data>

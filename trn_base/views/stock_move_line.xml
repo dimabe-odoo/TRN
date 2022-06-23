@@ -8,12 +8,18 @@
                 <xpath expr="//field[@name='product_id']"
                        position="after">
                     <field name="picking_code" invisible="1"/>
+                    <field name="is_return_line" invisible="1"/>
                     <field name="analytic_account"
-                           attrs="{'required': [('picking_code','=','outgoing')],'invisible': [('picking_code','!=','outgoing')]}"/>
+                           attrs="{'required': [('picking_code','=','outgoing'),('is_return_line','=',False)],'invisible': [('picking_code','!=','outgoing')]}"/>
+                    <field name="stock_product_lot_ids" invisible="1"/>
+                    <field name="product_stock_qty"/>
                 </xpath>
                 <xpath expr="//field[@name='lot_name']" position="attributes">
-                  <attribute name="readonly">1</attribute>
-              </xpath>
+                    <attribute name="readonly">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='lot_id']" position="attributes">
+                    <attribute name="domain">[('id','in',stock_product_lot_ids)]</attribute>
+                </xpath>
             </field>
         </record>
     </data>

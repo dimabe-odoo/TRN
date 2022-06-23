@@ -8,7 +8,7 @@ class StockMove(models.Model):
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
         res = super(StockMove, self)._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id,
                                                                 description)
-        if self._is_out():
+        if self._is_out() and not self.picking_id.is_return:
             res.pop(1)
             for line in self.move_line_ids:
                 if line.analytic_account:
