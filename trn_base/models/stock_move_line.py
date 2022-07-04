@@ -8,6 +8,7 @@ class StockMoveLine(models.Model):
     analytic_account = fields.Many2one('account.analytic.account', string="Cuenta Analítica")
     product_unit_cost = fields.Float('Costo Unitario')
     product_total_cost = fields.Float('Costo Total')
+    supplier_lot = fields.Char('Lote Proveedor')
     product_stock_qty = fields.Float('Stock Disponible', compute='compute_product_stock_qty')
     stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
