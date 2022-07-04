@@ -29,10 +29,13 @@
             <field name="model">stock.move.line</field>
             <field name="inherit_id" ref="stock_barcode.stock_move_line_product_selector"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('row')][2]" position="inside">
-                    <div class="col-6 my-2 d-flex align-items-baseline">
-                        <i class="fa fa-barcode mr-3"/>
-                        <field name="supplier_lot" placeholder="Lote Proveedor"/>
+                <xpath expr="//div[hasclass('row')][2]" position="after">
+                    <div class="row justify-content-center justify-content-md-start">
+                        <div class="col-6 my-2 d-flex align-items-baseline">
+                            <i class="fa fa-barcode mr-3"/>
+                            <field name="supplier_lot" attrs="{'invisible': [('picking_code','=', 'outgoing')]}"
+                                   placeholder="Lote Proveedor"/>
+                        </div>
                     </div>
                 </xpath>
             </field>
