@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('row')][2]" position="after">
                     <div class="row" attrs="{'invisible': [('picking_code','=', 'outgoing')]}">
-                        <div class="col-6 my-2 d-flex align-items-baseline">
+                        <div class="col-12 my-2 d-flex align-items-baseline">
                             <i class="fa fa-barcode mr-3"/>
                             <field name="supplier_lot"
                                    placeholder="Lote Proveedor"/>
