@@ -66,7 +66,7 @@ class StockMoveLine(models.Model):
                         'name': last_lot_id,
                         'product_id': vals_list['product_id'],
                         'is_auto_lot': True,
-                        'company_id': self.env.user.company_id.id,
+                        'company_id': self.env.company.id,
                     })
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
