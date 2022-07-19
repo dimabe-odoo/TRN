@@ -28,7 +28,10 @@
         'reports/purchase_order.xml',
         'views/stock_move_line.xml',
         'views/stock_picking.xml',
-        'views/ir_ui_menu.xml'
+        'views/ir_ui_menu.xml',
+        'views/purchase_order.xml',
+        'views/product_template.xml',
+        'views/res_company.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

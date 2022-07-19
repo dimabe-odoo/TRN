@@ -37,6 +37,15 @@
                                    placeholder="Lote Proveedor"/>
                         </div>
                     </div>
+                    <div class="row" attrs="{'invisible': [('picking_code','!=', 'outgoing')]}">
+                        <div class="col-12 my-2 d-flex align-items-baseline">
+                            <field name="picking_code" invisible="1"/>
+                            <field name="is_return_line" invisible="1"/>
+                            <i class="fa fa-tags"/>
+                            <field name="analytic_account"
+                                   attrs="{'required': [('picking_code','=','outgoing'),('is_return_line','=',False)], 'invisible': [('picking_code','!=','outgoing')]}"/>
+                        </div>
+                    </div>
                 </xpath>
             </field>
         </record>
