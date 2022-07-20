@@ -8,7 +8,7 @@ class StockWarehouseOrderpoint(models.Model):
     def create(self, vals_list):
         res = super(StockWarehouseOrderpoint, self).create(vals_list)
         if 'product_min_qty' in vals_list.keys():
-            diff = res.product_id.product_tmpl_id.qty_available - res.product_id.product_tmpl_id.product_min_qty
+            diff = res.product_id.product_tmpl_id.qty_available - res.product_min_qty
             res.product_id.product_tmpl_id.write({
                 'stock_min_qty': res.product_min_qty,
                 'stock_diff_qty': diff,
