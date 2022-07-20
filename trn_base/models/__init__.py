@@ -6,3 +6,6 @@ from . import stock_production_lot
 from . import stock_picking
 from . import product_template
 from . import res_company
+from . import stock_quant
+from . import product_template
+
