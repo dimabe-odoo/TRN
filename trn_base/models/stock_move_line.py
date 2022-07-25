@@ -2,10 +2,18 @@ from odoo import fields, models, api
 from ..utils.lot_generator import generate_lot, get_last_lot
 
 
+def get_message(qty_requested, qty_done):
+    message = 'La cantidad realizada no puede ser mayor a la demanda \n'
+    message += f'Cantidad Solicitada {qty_requested} \n'
+    message += f'Cantidad Realizada {qty_done} '
+    return message
+
+
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
     analytic_account = fields.Many2one('account.analytic.account', string="Cuenta Analítica")
+    product_requested_qty = fields.Float('Demanda')
     product_unit_cost = fields.Float('Costo Unitario')
     product_total_cost = fields.Float('Costo Total')
     supplier_lot = fields.Char('Lote Proveedor')
@@ -46,8 +54,13 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for item in self:
-            if item.qty_done == 0:
-                print()
+            if item.picking_id:
+                if item.product_requested_qty < item.qty_done:
+                    raise models.ValidationError(item.get_message(item.product_requested_qty, item.qty_done))
+                if not item.analytic_account and item.picking_code == 'outgoing':
+                    raise models.UserError(
+                        f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta analítica,'
+                        f' por lo cual no se puede finalizar la orden de entrega')
             item.write({
                 'product_unit_cost': item.product_id.standard_price,
                 'product_total_cost': item.product_id.standard_price * item.qty_done
@@ -71,4 +84,5 @@ class StockMoveLine(models.Model):
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
         res = super(StockMoveLine, self).create(vals_list)
+
         return res

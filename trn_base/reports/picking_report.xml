@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_picking_inherit_trn" inherit_id="stock.report_picking">
+            <xpath expr="//table[1]" position="replace">
+                <t t-call="trn_base.stock_move_line_table_custom"/>
+            </xpath>
+        </template>
+        <template id="stock_move_line_table_custom">
+            <table class="table table-sm">
+                <t t-set="has_serial"
+                   t-value="any(move_line.lot_id for move_line in o.move_line_ids_without_package)"/>
+                <t t-set="has_barcode"
+                   t-value="any(move_line.product_id and move_line.product_id.sudo().barcode for move_line in o.move_line_ids_without_package)"/>
+                <thead>
+                    <tr>
+                        <th name="th_product">
+                            <strong>PRODUCTO</strong>
+                        </th>
+                        <th>
+                            <strong>DEMANDA</strong>
+                        </th>
+                        <th t-if="o.state == 'done'">
+                            <strong>REALIZADO</strong>
+                        </th>
+                        <th>
+                            CUENTA ANALÍTICA
+                        </th>
+                        <th name="th_from" t-if="o.picking_type_id.code != 'outgoing'" class="text-left"
+                            groups="stock.group_stock_multi_locations">
+                            <strong>A</strong>
+                        </th>
+                        <th name="th_to" t-if="o.picking_type_id.code != 'incoming'" class="text-left"
+                            groups="stock.group_stock_multi_locations">
+                            <strong>DESDE</strong>
+                        </th>
+                        <th name="th_serial_number" t-if="has_serial_number" class="text-center">
+                            <strong>LOTE/N° DE SERIE</strong>
+                        </th>
+                        <th name="th_barcode" class="text-center">
+                            <strong>CÓDIGO DE BARRAS DEL PRODUCTO</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="o.move_line_ids_without_package" t-as="ml">
+                        <tr>
+                            <td>
+                                <span t-field="ml.product_id.display_name"/>
+                                <br/>
+                                <span t-field="ml.product_id.description_picking"/>
+                            </td>
+                            <td>
+                                <span t-field="ml.product_requested_qty"/>
+                                <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                            </td>
+                            <td t-if="o.state == 'done'">
+                                <span t-field="ml.qty_done"/>
+                                <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                            </td>
+                            <td>
+                                <span t-if="ml.analytic_account" t-field="ml.analytic_account"/>
+                            </td>
+                            <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
+                                <span t-field="ml.location_id.display_name"/>
+                            </td>
+                            <td t-if="o.picking_type_id.code != 'outgoing'" groups="stock.group_stock_multi_locations">
+                                <span t-field="ml.location_dest_id.display_name"/>
+                            </td>
+                            <td class="text-center h6" t-if="has_serial_number">
+                                <div t-esc="ml.lot_id.name or ml.lot_name"
+                                     t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="product_barcode != ml.product_id.barcode">
+                                    <span t-if="ml.product_id and ml.product_id.barcode">
+                                        <div t-field="ml.product_id.barcode"
+                                             t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}"/>
+                                    </span>
+                                    <t t-set="product_barcode" t-value="ml.product_id.barcode"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </template>
+    </data>
+</odoo>

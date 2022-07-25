@@ -32,6 +32,7 @@
         'views/purchase_order.xml',
         'views/product_template.xml',
         'views/res_company.xml',
+        'reports/picking_report.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
