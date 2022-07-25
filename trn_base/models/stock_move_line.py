@@ -56,7 +56,7 @@ class StockMoveLine(models.Model):
         for item in self:
             if item.picking_id:
                 if item.product_requested_qty < item.qty_done:
-                    raise models.ValidationError(item.get_message(item.product_requested_qty, item.qty_done))
+                    raise models.ValidationError(get_message(item.product_requested_qty, item.qty_done))
                 if not item.analytic_account and item.picking_code == 'outgoing':
                     raise models.UserError(
                         f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta analítica,'
