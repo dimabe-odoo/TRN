@@ -85,5 +85,8 @@
                 </tbody>
             </table>
         </template>
+        <record id="stock.action_report_picking" model="ir.actions.report">
+            <field name="name">Operaciones de Picking</field>
+        </record>
     </data>
 </odoo>
