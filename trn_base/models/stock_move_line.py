@@ -14,6 +14,7 @@ class StockMoveLine(models.Model):
 
     analytic_account = fields.Many2one('account.analytic.account', string="Cuenta Analítica")
     product_requested_qty = fields.Float('Demanda')
+    product_requested_uom_id = fields.Many2one('uom.uom', 'Unidad de Medida')
     product_unit_cost = fields.Float('Costo Unitario')
     product_total_cost = fields.Float('Costo Total')
     supplier_lot = fields.Char('Lote Proveedor')
@@ -21,6 +22,11 @@ class StockMoveLine(models.Model):
     product_stock_qty = fields.Float('Stock Disponible', compute='compute_product_stock_qty')
     stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
+
+    @api.onchange('product_id')
+    def onchange_product_requested(self):
+        for item in self:
+            item.product_requested_uom_id = item.product_id.uom_id
 
     @api.depends('product_id', 'location_id', 'lot_id')
     def compute_stock_product_lot_ids(self):
@@ -55,11 +61,13 @@ class StockMoveLine(models.Model):
     def _action_done(self):
         for item in self:
             if item.picking_id:
-                if item.product_requested_qty < item.qty_done:
-                    raise models.ValidationError(get_message(item.product_requested_qty, item.qty_done))
+                if item.product_requested_qty > 0:
+                    if item.product_requested_qty < item.qty_done:
+                        raise models.ValidationError(get_message(item.product_requested_qty, item.qty_done))
                 if not item.analytic_account and item.picking_code == 'outgoing':
                     raise models.UserError(
-                        f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta analítica,'
+                        f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta '
+                        f'analítica,'
                         f' por lo cual no se puede finalizar la orden de entrega')
             item.write({
                 'product_unit_cost': item.product_id.standard_price,
@@ -84,5 +92,4 @@ class StockMoveLine(models.Model):
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
         res = super(StockMoveLine, self).create(vals_list)
-
         return res
