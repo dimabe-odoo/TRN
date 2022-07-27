@@ -73,7 +73,6 @@ class StockMoveLine(models.Model):
                 'product_unit_cost': item.product_id.standard_price,
                 'product_total_cost': item.product_id.standard_price * item.qty_done
             })
-            test = ','.join()
         return super(StockMoveLine, self)._action_done()
 
     @api.model
