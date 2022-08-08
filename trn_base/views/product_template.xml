@@ -11,8 +11,9 @@
                 <field name="state_stock" invisible="1"/>
             </xpath>
             <xpath expr="//tree" position="attributes">
-                <attribute name="decoration-danger">state_stock in ('under_minimum','in_minimum')</attribute>
+                <attribute name="decoration-danger">state_stock in ('under_minimum')</attribute>
                 <attribute name="decoration-success">state_stock in ('over_minimum')</attribute>
+                <attribute name="decoration-warning">state_stock in ('at_minimum')</attribute>
             </xpath>
         </field>
     </record>

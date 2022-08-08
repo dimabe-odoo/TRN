@@ -6,6 +6,13 @@
                 <t t-call="trn_base.stock_move_line_table_custom"/>
             </xpath>
         </template>
+        <template id="report_picking_inherit_done_trn" inherit_id="stock.report_delivery_document">
+            <xpath expr="//table[@name='stock_move_table']" position="replace">
+                <t t-call="trn_base.stock_move_line_table_custom"/>
+            </xpath>
+            <xpath expr="//table[@name='stock_move_line_table']" position="replace">
+            </xpath>
+        </template>
         <template id="stock_move_line_table_custom">
             <table class="table table-sm">
                 <t t-set="has_serial"

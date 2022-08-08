@@ -1,4 +1,8 @@
 from odoo import models, fields, api
+from ..utils.date_utils_format import get_date_spanish
+import xlsxwriter
+
+import pandas as pd
 
 
 class StockPicking(models.Model):
