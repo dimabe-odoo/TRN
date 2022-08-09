@@ -1,0 +1,4 @@
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.action_report_picking
+msgid "Picking Operations"
+msgstr "Operaciones de Picking"

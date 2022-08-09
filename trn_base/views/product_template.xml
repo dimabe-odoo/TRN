@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_template_inherit_tree_view" model="ir.ui.view">
+        <field name="name">Product Template Tree Inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="before">
+                <field name="stock_min_qty"/>
+                <field name="stock_diff_qty"/>
+                <field name="state_stock" invisible="1"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">state_stock in ('under_minimum')</attribute>
+                <attribute name="decoration-success">state_stock in ('over_minimum')</attribute>
+                <attribute name="decoration-warning">state_stock in ('at_minimum')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_inherit_search_view" model="ir.ui.view">
+        <field name="name">Product Template Search Inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//separator[3]" position="after">
+                <filter string="Productos con stock critico" name="state_stock"
+                        domain="[('state_stock','in',('under_minimum','in_minimum'))]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
