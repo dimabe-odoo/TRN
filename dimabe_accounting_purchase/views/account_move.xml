@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button type="object" name="define_vendor_bill" string="Obtener OC"/>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="purchase_tmp_id"
+                       attrs="{'invisible': [('purchase_tmp_id','==',False),('move_type','not in',['in_invoice','in_refund'])]}"/>
+            </xpath>
+            <xpath expr="//page[@id='aml_tab']" position="after">
+                <page name="apl_tab" string="Información OC"
+                      attrs="{'invisible':[('purchase_tmp_id','==',False),('move_type','not in',['in_invoice','in_refund'])]}">
+                    <field name="purchase_account_line_ids">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="qty_received"/>
+                            <field name="line_qty"/>
+                            <field name="line_price_unit"/>
+                            <field name="unit_price"/>
+                            <field name="subtotal"/>
+                            <field name="line_id" invisible="1"/>
+                            <field name="state"/>
+                            <button type="object" string="Enlazar" name="associate_line"
+                                    attrs="{'column_invisible': [('parent.state', '!=', 'draft')] , 'invisible': [('state','!=','draft')]}"
+                                    class="oe_highlight"/>
+                            <button type="object" string="Desenlazar" name="unlink_line"
+                                    attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible' : [('state','!=', 'linked')]}"
+                                    class="oe_highlight"
+                                    confirm="¿Esta seguro de que quiere desenlazar esta linea? Esto modificara las cantidades facturadas de la OC"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
