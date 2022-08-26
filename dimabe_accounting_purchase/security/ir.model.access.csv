@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dimabe_accounting_purchase_account_purchase_line,Linea de OC en Factura,model_account_purchase_line,,1,1,1,1
+access_wizard_select_account_line,Seleccionar Apunte Contable,model_wizard_select_account_line,,1,1,1,1
+access_account_move_line_selection,account_move_line_selection,model_account_move_line_selection,,1,1,1,1
