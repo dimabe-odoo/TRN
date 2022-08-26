@@ -24,7 +24,7 @@
 
   # always loaded
   'data': [
-    #'security/ir.model.access.csv',
+    'security/ir.model.access.csv',
     'views/account_move.xml',
     'wizards/wizard_select_account_line.xml'
   ],
