@@ -56,12 +56,13 @@ class AccountPurchaseLine(models.Model):
                 'purchase_line_id': self.purchase_line_id.id,
                 'line_id': line.id
             })
-        view_id = self.env.ref('al_base.wizard_select_account_line_form')
+        view_id = self.env.ref('dimabe_accountig_purchase.wizard_select_account_line_form')
         return {
             'name': "Asociación de Apunte Contable",
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
+            
             'res_model': 'wizard.select.account.line',
             'views': [(view_id.id, 'form')],
             'view_id': view_id.id,
