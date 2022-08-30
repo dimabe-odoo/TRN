@@ -92,4 +92,7 @@ class StockMoveLine(models.Model):
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
         res = super(StockMoveLine, self).create(vals_list)
+        if res.picking_id.picking_type_id.code == 'incoming':
+            if res.move_id:
+                res.product_requested_qty = res.move_id.product_uom_qty
         return res
