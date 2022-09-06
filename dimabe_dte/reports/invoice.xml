@@ -1,0 +1,1109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="custom_invoice">
+        <t t-call="web.html_container">
+            <t t-set="l" t-value="0"/>
+            <t t-set="range_copies" t-value="res_company.copies_qty"/>
+            <div class="page">
+                <t t-foreach="docs" t-as="d">
+                    <div class="article"  t-att-data-oe-model="d and d._name" t-att-data-oe-id="d and d.id" t-att-data-oe-lang="d and d.env.context.get('lang')">
+                        <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                            <t t-set="range_copies" t-value="1"/>
+                        </t>
+                        <t t-foreach="range(range_copies)" t-as="q">
+                            <br/>
+                            <div style="width: 100%;">
+                                <div style="width: 50%; height: 130px; display: inline-block;">
+                                    <div style="float: left; width: 15%">
+                                        <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                            <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)" style="width: 130px; max-height: 80px"/>
+                                        </t>
+                                    </div>
+                                    <div style="width:82%; float: right">
+                                        <table style="width:100%">
+                                            <tr>
+                                                <td colspan="3" style="text-align: center;">
+                                                    <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                        <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                                            <span t-esc="d.get_format_rut(res_company.vat)"
+                                                                style="font-size: 14px; font-weight: bold;"/>
+                                                            <br/>
+                                                        </t>
+                                                        <span t-field="res_company.name"
+                                                            style="font-size: 14px; font-weight: bold;"/>
+                                                        <p style="font-size: 10px; "
+                                                        t-field="res_company.l10n_cl_activity_description"/>
+                                                    </t>
+                                                    <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                        <t t-if="d.partner_id.parent_id">
+                                                            <span t-field="d.partner_id.parent_id.name"
+                                                                style="font-size: 14px; font-weight: bold;"/>
+                                                            <p style="font-size: 10px; "
+                                                            t-field="d.partner_id.parent_id.l10n_cl_activity_description"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="d.partner_id.name"
+                                                                style="font-size: 14px; font-weight: bold;"/>
+                                                            <p style="font-size: 10px; "
+                                                            t-field="d.partner_id.l10n_cl_activity_description"/>
+                                                        </t>
+
+                                                    </t>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 100%; font-size: 10px; text-align: center;">
+                                                    <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                        <span t-field="res_company.partner_id.street"/>
+                                                        <br/>
+                                                        Mesa Central:
+                                                        <span t-field="res_company.phone"/>
+                                                        <br/>
+                                                        E-mail:
+                                                        <span t-field="res_company.email"/>
+                                                        <br/>
+                                                        <span t-field="res_company.website"/>
+                                                    </t>
+                                                    <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                        <t t-if="d.partner_id.parent_id">
+                                                            <span t-field="d.partner_id.parent_id.street"/>
+                                                            <br/>
+                                                            Teléfono/Móvil:
+                                                            <t t-if="d.partner_id.parent_id.phone">
+                                                                <span t-field="d.partner_id.parent_id.phone"/>
+                                                            </t>
+                                                            <t t-if="d.partner_id.parent_id.phone and d.partner_id.parent_id.mobile">
+                                                                -
+                                                            </t>
+                                                            <t t-if="d.partner_id.parent_id.mobile">
+                                                                <span t-field="d.partner_id.parent_id.mobile"/>
+                                                            </t>
+                                                            <br/>
+                                                            E-mail:
+                                                            <span t-field="d.partner_id.parent_id.email"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span t-field="d.partner_id.street"/>
+                                                            <br/>
+                                                            Teléfono/Móvil:
+                                                            <t t-if="d.partner_id.phone">
+                                                                <span t-field="d.partner_id.phone"/>
+                                                            </t>
+                                                            <t t-if="d.partner_id.phone and d.partner_id.mobile">
+                                                                -
+                                                            </t>
+                                                            <t t-if="d.partner_id.mobile">
+                                                                <span t-field="d.partner_id.mobile"/>
+                                                            </t>
+                                                            <br/>
+                                                            E-mail:
+                                                            <span t-field="d.partner_id.email"/>
+                                                        </t>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                    <div style="width: 48%; display: inline-block;">
+                                        <div style="float: right; width: 60%;">
+                                            <table style="border:4px solid; border-color: #ff0000; float: right; width: 100%; height: 120px;">
+                                                <tr>
+                                                    <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                        R.U.T.:
+                                                        <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                            <span style="color:#ff0000;" t-esc="d.get_format_rut(res_company.vat)"/>
+                                                        </t>
+                                                        <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                            <t t-if="d.partner_id.parent_id">
+                                                                <span style="color:#ff0000;"
+                                                                    t-field="d.partner_id.parent_id.vat"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span style="color:#ff0000;" t-field="d.partner_id.vat"/>
+                                                            </t>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                        <span t-field="d.l10n_latam_document_type_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                        N°
+                                                        <span t-field="d.l10n_latam_document_number"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="text-align: center; font-size: 11px;color:#ff0000;">
+                                                        <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                            <strong>S.I.I - RANCAGUA</strong>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <br/>
+                            <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                <div style="width:100%;margin:0 auto;border:1px solid; border-radius: 5px; ">
+                                    <table style="width:98%;margin: 0 auto;font-size:9px; padding: 6px;" cellspacing="1">
+                                        <tr>
+                                            <td style="width: 16%;">
+                                                <strong>FECHA</strong>
+                                            </td>
+                                            <td style="width: 34%;">
+                                                :
+                                                <t t-if="d.invoice_date">
+                                                     <span t-esc="d.invoice_date.strftime('%d-%m-%Y')"/>
+                                                </t>
+                                            </td>
+                                            <td style="width: 16%;">
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    <strong>FECHA VENCIMIENTO</strong>
+                                                </t>
+                                            </td>
+                                            <td style="width: 34%;">
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    :
+                                                    <t t-if="d.invoice_date_due">
+                                                        <span t-esc="d.invoice_date_due.strftime('%d-%m-%Y')"/>
+                                                    </t>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>SEÑORES</strong>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                :
+                                                <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                    <span t-field="d.partner_id.name"/>
+                                                </t>
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    <span t-field="res_company.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                <strong>RUT</strong>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                :
+                                                <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                    <span t-field="d.partner_id.vat"/>
+                                                </t>
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    <span t-esc="d.get_format_rut(res_company.vat)"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:left;">
+                                                <strong>DIRECCION</strong>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                :
+                                                <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                    <t t-if="d.partner_id.parent_id">
+                                                        <span t-field="d.partner_id.parent_id.street"/>
+                                                    </t>
+                                                    <t else="">
+                                                        <span t-field="d.partner_id.street"/>
+                                                    </t>
+                                                </t>
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    <span t-field="res_company.partner_id.street"/>
+                                                </t>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                <strong>CIUDAD</strong>
+                                            </td>
+                                            <td style="text-align:left;">
+                                                :
+                                                <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                    <span style="text-transform: uppercase;"
+                                                        t-field="d.partner_id.city"/>
+                                                </t>
+                                                <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                    <span style="text-transform: uppercase;"
+                                                        t-field="res_company.partner_id.city"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                <td style="text-align:left;">
+                                                    <strong>GIRO</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span t-field="d.partner_id.l10n_cl_activity_description"/>
+                                                </td>
+                                                <td colspan="2"></td>
+                                            </t>
+                                            <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                <td style="text-align:left;">
+                                                    <strong>COMUNA</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span style="text-transform: uppercase;"
+                                                        t-field="res_company.partner_id.city"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <strong>GIRO</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span t-field="res_company.partner_id.l10n_cl_activity_description"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                        <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <strong>COND. DE PAGO</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span t-field="d.invoice_payment_term_id.name"/>
+                                                    <t t-if="d.invoice_payment_term_id.l10n_cl_sii_code">
+                                                        <span style="margin-left: 4px"
+                                                            t-esc="d.invoice_payment_term_id.l10n_cl_sii_code[3:]"/>
+                                                    </t>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <strong>TELEFONO</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <t t-if="d.partner_id.phone">
+                                                        <span t-field="d.partner_id.phone"/>
+                                                    </t>
+                                                    <t t-if="d.partner_id.phone and d.partner_id.mobile">
+                                                        -
+                                                    </t>
+                                                    <t t-if="d.partner_id.mobile">
+                                                        <span t-field="d.partner_id.mobile"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:left;">
+                                                    <strong>VENDEDOR</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span t-field="d.invoice_user_id"/>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    <strong>DIR. DESPACHO</strong>
+                                                </td>
+                                                <td style="text-align:left;">
+                                                    :
+                                                    <span t-field="d.partner_shipping_id.street"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </t>
+                            <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                <table style="margin-top: 40px">
+                                    <tr>
+                                        <td style="font-size: 14px; font-weight: bold;">
+                                            <strong>S.I.I. - RANCAGUA</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 14px; font-weight: bold;">
+                                            <strong>FECHA EMISION:
+                                                <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 14px; font-weight: bold;">
+                                            <strong>
+                                                <span style="text-transform: uppercase"
+                                                    t-field="d.l10n_latam_document_type_id.name"/>:
+                                                <span style="text-transform: uppercase"
+                                                    t-field="d.l10n_latam_document_number"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 14px; font-weight: bold;">
+                                            <strong>CLIENTE:
+                                                <span t-field="d.partner_id.name"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-size: 14px; font-weight: bold;">
+                                            <strong>DIR. ENTREGA:
+                                                <span style="text-transform: uppercase"
+                                                    t-field="d.partner_shipping_id.street"/>
+                                                <span style="text-transform: uppercase"
+                                                    t-field="d.partner_shipping_id.city"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
+                            <br/>
+                            <t t-if="d.l10n_latam_document_type_id.code == '61' or d.l10n_latam_document_type_id.code == '56' or d.l10n_latam_document_type_id.code == '33'">
+                                <div style="width: 100%; border:1px solid; border-radius: 5px;">
+                                    <p style="font-size: 12px; font-weight: bold; margin: 8px">DOCUMENTOS
+                                        REFERENCIADOS
+                                    </p>
+                                    <table style="width: 100%; font-size: 9px;" cellspacing="0">
+                                        <tr>
+                                            <th style="border-right: 1px solid; border-bottom: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                TIPO
+                                                OPERACION
+                                            </th>
+                                            <th style="border-right: 1px solid; border-bottom: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                RAZON
+                                            </th>
+                                            <th style="border-right: 1px solid; border-bottom: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                TIPO
+                                                DOCUMENTO
+                                            </th>
+                                            <th style="border-right: 1px solid; border-bottom: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                FOLIO
+                                            </th>
+                                            <th style="border-bottom: 1px solid; border-top: 1px solid;padding-left: 4px;">FECHA</th>
+                                        </tr>
+                                        <t t-foreach="d.l10n_cl_reference_ids" t-as="line">
+                                            <tr>
+                                                <td style="border-right: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                    <span t-field="line.reference_doc_code"/>
+                                                </td>
+                                                <td style="border-right: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                    <span t-field="line.reason"/>
+                                                </td>
+                                                <td style="border-right: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                    <span t-field="line.l10n_cl_reference_doc_type_selection"/>
+                                                </td>
+                                                <td style="border-right: 1px solid; border-top: 1px solid;padding-left: 4px;">
+                                                    <span t-field="line.origin_doc_number"/>
+                                                </td>
+                                                <td style="border-top: 1px solid;padding-left: 4px;">
+                                                    <span t-field="line.date"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </div>
+                            </t>
+                            <p style="font-size: 11px; margin-top:10px;margin-bottom:5px">
+                                <strong>Sirvase Recibir Conforme lo siguiente según Detalle:</strong>
+                            </p>
+                            <div
+                                    style="width:100%;margin:0 auto;min-height:450px;border:1px solid; border-radius: 5px; margin-top:4px; position: relative;">
+                                <table style="width:100%;font-size:9px;" cellspacing="0">
+                                    <tr>
+                                        <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                            <th style="width:10%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;padding-left: 4px;">
+                                                CODIGO
+                                            </th>
+                                            <th style="width:6%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;padding-left: 4px;">
+                                                CANT
+                                            </th>
+                                        </t>
+                                        <t t-else="">
+                                            <th style="width:10%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;padding-left: 4px;">
+                                                CANTIDAD
+                                            </th>
+                                        </t>
+                                        <th style="width:50%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;padding-left: 4px;">
+                                            DETALLE
+                                        </th>
+                                        <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                            <th style="width:10%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;padding-left: 4px;">
+                                                DSCTO.
+                                            </th>
+                                        </t>
+                                        <th style="width:10%;border-right:1px solid; border-bottom:1px solid;padding-top: 6px;padding-left: 4px;">
+                                            PRECIO
+                                        </th>
+                                        <th style="width:10%;border-bottom:1px solid;padding-top: 6px;padding-left: 4px;">TOTAL</th>
+                                    </tr>
+                                    <t t-foreach="d.invoice_line_ids" t-as="line">
+                                        <t t-if="line.display_type in ['line_section','line_note']">
+                                            <tr>
+                                                <td style="border-bottom:1px solid;"></td>
+                                                <td colspan="4" style="border-bottom:1px solid; text-align: left; padding-left:4px;">
+                                                    <span t-esc="line.name" style="font-style: italic;"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <t t-else="">
+                                            <tr>
+                                                <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                                    <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;padding-right:4px;">
+                                                        <span t-esc="line.product_id.product_tmpl_id.al_sku"/>
+                                                    </td>
+                                                </t>
+                                                <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;padding-right:4px;">
+                                                    <span t-esc="int(line.quantity)"/>
+                                                </td>
+                                                <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
+                                                    <span t-field="line.name"/>
+                                                </td>
+                                                <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                                    <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                        <span t-esc="d.roundclp(line.quantity * line.discount * line.price_unit / 100)"/>
+                                                    </td>
+                                                </t>
+                                                <td style="border-right:1px solid;text-align:right;border-bottom:1px solid;text-align:right;padding-right:4px;padding-left:4px;">
+                                                    <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                                        <span t-esc="d.roundclp(line.price_unit_with_discount + line.taxes_amount)"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="d.roundclp(line.price_unit)"/>
+                                                    </t>
+                                                </td>
+                                                <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                    <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                                        <span t-esc="d.roundclp(line.subtotal_with_taxes)"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="d.roundclp(line.price_subtotal)"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+
+                                    </t>
+                                </table>
+
+                                <div style="width: 100%; bottom: 0px; position: absolute;">
+                                     <t t-if="d.uf_value > 0 or d.narration">
+                                        <div style="text-align: left; ">
+                                                <table style="width: 100%; font-size: 9px;" cellspacing="0">
+                                                    <t t-if="d.uf_value">
+                                                        <tr>
+                                                            <td>
+                                                                    <span style="font-style: italic; padding-left: 4px;">Valor UF al</span>
+                                                                    <t t-if="d.uf_date">
+                                                                        <span style="font-style: italic;" t-esc="d.uf_date.strftime('%d-%m-%Y')"/>
+                                                                    </t>
+                                                                    a $
+                                                                    <span style="font-style: italic;" t-esc="d.formatufclp(d.uf_value)" />
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-if="d.narration">
+                                                        <tr>
+                                                            <td>
+                                                                <i style="padding-left: 4px;">
+                                                                    <span t-field="d.narration" style="font-style: italic;"/>
+                                                                </i>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+
+                                                </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div style="width:100%;border:1px solid; border-radius: 5px; margin-top:4px;">
+                                <table style="padding: 6px; width: 98%; font-size: 12px">
+                                    <tr>
+                                        <td style="padding-left: 4px;">Son:
+                                            <span style="margin-left: 4px;"
+                                                t-esc="d.company_id.currency_id.amount_to_text(d.amount_total)"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div style="width:100%; min-height: 90px; margin-top:4px;">
+                                <div style="float:right;width:50%;">
+                                    <div style="width:100%;float: right;border:1px solid;border-radius: 5px; ">
+                                        <table style="width: 100%; font-size: 9px;" cellspacing="0">
+                                            <tr>
+                                                <td style="width:40%;border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                    <strong>SUB TOTAL</strong>
+                                                </td>
+                                                <td style="width:60%;border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                    <t t-if="d.l10n_latam_document_type_id.code == '39'">
+                                                        <span t-esc="d.roundclp(sum(d.mapped('invoice_line_ids').mapped('subtotal_with_taxes')))"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span t-esc="d.roundclp(d.subtotal_amount)"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                                <tr>
+                                                    <td style="width:40%;border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                        <strong>TOTAL NETO</strong>
+                                                    </td>
+                                                    <td style="width:60%;border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                        <span t-esc="d.roundclp(d.net_amount)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                                <tr>
+                                                    <td style="width:40%;border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                        <strong>TOTAL EXENTO</strong>
+                                                    </td>
+                                                    <td style="width:60%;border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                        <span t-esc="d.roundclp(d.total_exempt)"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="d.l10n_latam_document_type_id.code != '39'">
+                                                <t t-foreach="d.amount_by_group" t-as="tax">
+                                                    <tr>
+                                                        <td style="border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                            <strong>
+                                                                <span t-esc="tax[0]"/>
+                                                            </strong>
+                                                        </td>
+                                                        <td style="border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                            <span t-esc="d.roundclp(tax[1])"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                            <tr>
+                                                <td style="border-right: 1px solid; padding: 4px;">
+                                                    <strong>TOTAL</strong>
+                                                </td>
+                                                <td style="padding: 4px; text-align: right;">
+                                                    <span t-esc="d.roundclp(d.amount_total)"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <t t-if="len(d.invoice_line_ids.filtered(lambda x: x.display_type)) > 0 or d.uf_value > 0">
+                                    <div style="width:48%;float: left;border-radius: 5px; text-align: left">
+
+                                    </div>
+                                </t>
+                            </div>
+                            <div style="margin-top: 12px; width:100%; min-height:120px;">
+                                <div style="width:49%; float:left; ">
+                                    <div style="width: 100%px; height: 150px; text-align:center;">
+                                        <div style="width: 100%;height: 150px;">
+                                            <t t-if="d.move_type == 'in_invoice' or d.move_type == 'in_refund'">
+                                                <t t-if="d.state == 'posted'">
+                                                    <t t-if="d.ted">
+                                                        <img t-att-src="'data:image/png;base64,%s' % to_text(d.ted)"
+                                                            style="width:320px"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <div style="width: 320; text-align: center; border: 1px solid #808080">
+                                                            <span>Código de barra no disponible.</span>
+                                                            <br/>
+                                                            <span>Comunicarse con Administrador de Sistema</span>
+                                                        </div>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <div style="width: 320; text-align: center;  border: 1px solid #808080">
+                                                        <span>Código de barra no disponible.</span>
+                                                        <br/>
+                                                        <span>Factura debe estar Confirmada</span>
+                                                    </div>
+                                                </t>
+
+                                            </t>
+                                            <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                <img t-att-src="'data:image/png;base64,%s' % to_text(d.ted)"
+                                                    style="width:320px"/>
+                                            </t>
+                                        </div>
+                                        <p class="text-center" style="font-size: 9px;">
+                                            Timbre Electrónico SII
+                                            <br/>
+                                            <t t-if="d.move_type == 'out_invoice' or d.move_type == 'out_refund'">
+                                                Resolución Nº:
+                                                <span t-field="res_company.l10n_cl_dte_resolution_number"/>
+                                                de Fecha:
+                                                <span t-field="res_company.l10n_cl_dte_resolution_date"
+                                                    t-field-options='{"widget": "date"}'/>
+                                                <br/>
+                                            </t>
+                                            Verifique documento en www.sii.cl
+                                        </p>
+                                    </div>
+                                </div>
+                                <br/>
+                                <t t-if="d.l10n_latam_document_type_id.code == '33' and d.move_type == 'out_invoice'">
+                                    <div
+                                            style="width:50%; float:right; padding-top:2px; border: 1px solid; border-radius: 5px;">
+                                        <table style="font-size:9px; width: 100%;" cellspacing="0">
+                                            <tr>
+                                                <th style="text-align: left; width: 20%; border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                    Nombre
+                                                </th>
+                                                <td style="width: 80%;border-bottom: 1px solid;"></td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 20%;;border-bottom: 1px solid; border-right: 1px solid;padding: 4px;">
+                                                    R.U.T.
+                                                </th>
+                                                <td style="width: 80%;border-bottom: 1px solid;"></td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 16%;;border-bottom: 1px solid; border-right: 1px solid;padding: 4px;">
+                                                    Fecha
+                                                </th>
+                                                <td style="width: 80%;border-bottom: 1px solid;"></td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 20%;;border-bottom: 1px solid; border-right: 1px solid;padding: 4px;">
+                                                    Recinto
+                                                </th>
+                                                <td style="width: 80%;border-bottom: 1px solid;"></td>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: left; width: 20%;;border-bottom: 1px solid; border-right: 1px solid;padding: 4px;">
+                                                    Firma
+                                                </th>
+                                                <td style="width: 80%;border-bottom: 1px solid;"></td>
+                                            </tr>
+                                        </table>
+                                        <p style="font-size: 9px; padding: 6px;">
+                                            El acuse de recibo que se declara en este act. de acuerdo a lo dispuesto en la
+                                            letra
+                                            b) del Art. 4°. y la letra c) del Art. 5° de la Ley 19983, acredita que la
+                                            entrega
+                                            de
+                                            mercaderias o servicio(s) prestado(s) ha(n) sino recibido(s).
+                                        </p>
+                                    </div>
+                                </t>
+                                <t t-set="l" t-value="l+1"/>
+                                <t t-if="l == range_copies and d.l10n_latam_document_type_id.code != '39'">
+                                    <div style="float: right; width: 100%; text-align: right; margin-top: 5px;">
+                                        <span>
+                                            <strong>CEDIBLE</strong>
+                                        </span>
+                                    </div>
+                                </t>
+                            </div>
+                            <t t-if="l == range_copies or d.l10n_latam_document_type_id.code == '39'">
+                                <div style="page-break-after:avoid;"></div>
+                            </t>
+                            <t t-else="">
+                                <div style="page-break-after:always;"></div>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </t>
+
+    </template>
+
+    <template id="custom_dispatch_guide">
+        <t t-call="web.html_container">
+            <t t-set="l" t-value="0"/>
+            <t t-foreach="range(res_company.copies_qty)" t-as="w">
+                <div class="page">
+                    <t t-foreach="docs" t-as="d">
+
+                        <div style="width: 100%;">
+                            <div style="width: 50%; height: 130px; display: inline-block;">
+                                <div style="float: left; width: 15%">
+                                    <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)" style="width: 130px; max-height: 80px"/>
+                                </div>
+                                <div style="width:82%; float: right">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td colspan="3" style="text-align: center;">
+                                                <span t-field="res_company.name"
+                                                    style="font-size: 14px; font-weight: bold;"/>
+                                                <p style="font-size: 10px; "
+                                                t-field="res_company.l10n_cl_activity_description"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100%; font-size: 10px; text-align: center;">
+                                                <span t-field="res_company.partner_id.street"/>
+                                                <br/>
+                                                Mesa Central:
+                                                <span t-field="res_company.phone"/>
+                                                <br/>
+                                                E-mail:
+                                                <span t-field="res_company.email"/>
+                                                <br/>
+                                                <span t-field="res_company.website"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div style="width: 48%; display: inline-block;">
+                                <div style="float: right; width: 60%;">
+                                    <table style="border:4px solid; border-color: #ff0000; float: right; width: 100%; height: 120px;">
+                                        <tr>
+                                            <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                R.U.T.:
+                                                <span style="color:#ff0000;" t-esc="d.get_format_rut(res_company.vat)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                <!--<span t-field="d.l10n_latam_document_type_id.name"/>-->
+                                                <span>GUÍA DE DESPACHO</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                                N°
+                                                <span t-field="d.l10n_latam_document_number"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td style="text-align: center; font-size: 11px;color:#ff0000;">
+                                                <strong>S.I.I - RANCAGUA</strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div style="width:100%;margin:0 auto;border:1px solid; border-radius: 5px; ">
+                            <table style="width:98%;margin: 0 auto;font-size:11px; padding: 6px;" cellspacing="1">
+                                <tr>
+                                    <td style="width: 16%;">
+                                        <strong>FECHA EMISION</strong>
+                                    </td>
+                                    <td style="width: 34%;">
+                                        :
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                    </td>
+                                    <td style="width: 16%;"></td>
+                                    <td style="width: 34%;"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>SEÑOR(ES)</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <t t-if="d.partner_id.parent_id">
+                                            <span t-field="d.partner_id.parent_id.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="d.partner_id.name"/>
+                                        </t>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <strong>R.U.T.</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <t t-if="d.partner_id.parent_id">
+                                            <span t-field="d.partner_id.parent_id.vat"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span  t-field="d.partner_id.vat"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+                                        <strong>DIRECCION</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <t t-if="d.partner_id.parent_id">
+                                            <span t-field="d.partner_id.parent_id.street"/>
+                                        </t>
+                                        <t else="">
+                                            <span t-field="d.partner_id.street"/>
+                                        </t>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <strong>GIRO:</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <span t-field="d.partner_id.l10n_cl_activity_description"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+                                        <strong>COMUNA</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <!--<span t-field="d.partner_id.state_id.name"/>-->
+                                        <span t-field="d.partner_id.city"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <strong>CIUDAD</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <span t-field="d.partner_id.city"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:left;">
+                                        <strong>DIRECCION DESP.</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <span t-field="d.partner_id.street"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <strong>IND. TRASLADO</strong>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        :
+                                        <span t-esc="d.l10n_cl_delivery_guide_reason[3:] if d.l10n_cl_delivery_guide_reason else ''"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p style="font-size: 11px;">
+                            <strong style="text-transform: uppercase;">Sirvase Recibir Conforme lo siguiente según
+                                Detalle:
+                            </strong>
+                        </p>
+                        <div style="width:100%;margin:0 auto;height:500px;border:1px solid; border-radius: 5px; margin-top:4px;">
+                            <table style="width:100%;font-size:11px;" cellspacing="0">
+                                <tr>
+                                    <th style="width:12%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;">
+                                        CANTIDAD
+                                    </th>
+                                    <th style="width:64%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;">
+                                        CONCEPTO
+                                    </th>
+                                    <t t-if="d.partner_id.l10n_cl_delivery_guide_price != 'none'">
+                                        <th style="width:12%;border-right:1px solid; border-bottom:1px solid;padding-top: 6px;">
+                                            PRECIO UNITARIO
+                                        </th>
+                                        <th style="width:12%;border-bottom:1px solid;padding-top: 6px;">TOTAL</th>
+                                    </t>
+                                </tr>
+                                <t t-foreach="d.move_ids_without_package" t-as="move">
+                                    <t t-foreach="move.move_line_ids.sorted(key=lambda line: line.location_id.id)"
+                                       t-as="line">
+                                        <tr>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;padding-right:4px;">
+                                                <span t-if="d.state != 'done'" t-esc="int(line.product_uom_qty)"/>
+                                                <span t-if="d.state == 'done'" t-esc="int(line.qty_done)"/>
+                                                <!--<span t-field="line.product_uom_id" groups="uom.group_uom"/>-->
+                                            </td>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
+                                                <span t-field="line.product_id.display_name"/>
+                                                <!--<span t-field="line.product_id.description_picking"/>-->
+                                            </td>
+                                            <t t-if="d.partner_id.l10n_cl_delivery_guide_price == 'product'">
+                                                <td style="border-right:1px solid;text-align:right;border-bottom:1px solid;text-align:right;padding-right:4px;padding-left:4px;">
+                                                    <span t-esc="d.roundclp(line.product_id.list_price)"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                    <t t-if="d.state != 'done'">
+                                                        <span t-esc="d.roundclp(line.product_uom_qty * line.product_id.list_price)"/>
+                                                    </t>
+                                                    <t t-if="d.state == 'done'">
+                                                        <span t-esc="d.roundclp(line.qty_done * line.product_id.list_price)"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="d.partner_id.l10n_cl_delivery_guide_price == 'sale_order'">
+                                                <td style="border-right:1px solid;text-align:right;border-bottom:1px solid;text-align:right;padding-right:4px;padding-left:4px;">
+                                                    <span
+                                                            t-esc="d.roundclp(d.sale_id.order_line.filtered(lambda a: a.product_id.id == line.product_id.id).price_unit)"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                    <t t-if="d.state != 'done'">
+                                                        <span
+                                                                t-esc="d.roundclp(line.product_uom_qty * d.sale_id.order_line.filtered(lambda a: a.product_id.id == line.product_id.id).price_unit)"/>
+                                                    </t>
+                                                    <t t-if="d.state == 'done'">
+                                                        <span
+                                                                t-esc="d.roundclp(line.qty_done * d.sale_id.order_line.filtered(lambda a: a.product_id.id == line.product_id.id).price_unit)"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </table>
+                        </div>
+
+                        <div style="width:100%; height: 160px; margin-top:4px;">
+                            <div style="width:100%; border: 1px solid; border-radius: 5px;">
+                                <table style="width: 100%; height: 50px; text-align: center" cellspacing="0">
+                                    <tr>
+                                        <th style="width: 50%; border-bottom: 1px solid; padding: 4px; border-right: 1px solid">
+                                            <span style="font-size: 11px;">CONDICIONES DE PAGO</span>
+                                        </th>
+                                        <th style="width: 50%; border-bottom: 1px solid; padding: 4px;">
+                                            <span style="font-size: 11px;">RAZÓN DE TRANSFERENCIA</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-right: 1px solid">
+                                            <span style="font-size: 11px;" t-field="d.sale_id.payment_term_id.name"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-size: 11px" t-field="d.l10n_cl_delivery_guide_reason"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br/>
+                            <t t-if="d.partner_id.l10n_cl_delivery_guide_price != 'none'">
+                                <div style="width:40%;border:1px solid; border-radius: 5px; float: right">
+                                    <table style="width: 100%; font-size: 11px;" cellspacing="0">
+                                        <tr>
+                                            <td style="border-bottom: 1px solid; border-right: 1px solid; padding: 4px; with:40%">
+                                                <strong>TOTAL NETO</strong>
+                                            </td>
+                                            <td style="border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                <span t-esc="d.roundclp(d.net_amount)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-bottom: 1px solid; border-right: 1px solid; padding: 4px;">
+                                                <strong>IVA 19%</strong>
+                                            </td>
+                                            <td style="border-bottom: 1px solid; padding: 4px; text-align: right;">
+                                                <span t-esc="d.roundclp(d.tax_amount)"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-right: 1px solid; padding: 4px;">
+                                                <strong>MONTO TOTAL</strong>
+                                            </td>
+                                            <td style="padding: 4px; text-align: right;">
+                                                <span t-esc="d.roundclp(d.amount_total)"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </t>
+                        </div>
+                        <br/>
+                        <t t-if="d.partner_id.l10n_cl_delivery_guide_price != 'none'">
+                            <div style="width:100%;border:1px solid; height: 50px; border-radius: 5px; margin-top:4px;">
+                                <table style="padding: 6px; width: 98%; font-size: 12px">
+                                    <tr>
+                                        <td style="width: 20px;">Son:</td>
+                                        <td>
+                                            <span t-esc="d.company_id.currency_id.amount_to_text(d.amount_total)"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                        <div style="margin-top: 12px; width:100%; min-height:100px;">
+                            <div style="width:49%; float:left; ">
+                                <div style="width: 100%px; height: 150px; text-align:center;">
+                                    <div style="width: 100%;height: 150px;">
+                                        <img t-att-src="'data:image/png;base64,%s' % to_text(d.ted)"
+                                             style="width:320px"/>
+                                    </div>
+                                    <p class="text-center" style="font-size: 9px;">
+                                        Timbre Electrónico SII
+                                        <br/>
+                                        Resolución Nº:
+                                        <span t-field="res_company.l10n_cl_dte_resolution_number"/>
+                                        de Fecha:
+                                        <span t-field="res_company.l10n_cl_dte_resolution_date"
+                                              t-field-options='{"widget": "date"}'/>
+                                        <br/>
+                                        Verifique documento en www.sii.cl
+                                    </p>
+                                </div>
+                            </div>
+                            <br/>
+                            <t t-if="l == res_company.copies_qty">
+                                <div style="width:49%;float:right;">
+                                    <span>CEDIBLE CON FACTURA</span>
+                                </div>
+                            </t>
+                            <t t-set="l" t-value="l+1"/>
+                        </div>
+                    </t>
+                </div>
+                <t t-if="l == res_company.copies_qty">
+                    <div style="page-break-after:avoid;"></div>
+                </t>
+                <t t-else="">
+                    <div style="page-break-after:always;"></div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="paper_format_letter_custom" model="report.paperformat">
+        <field name="name">Carta Custom</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">15</field>
+        <field name="margin_right">15</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <report id="action_custom_invoice" string="Factura Custom" model="account.move" report_type="qweb-pdf"
+            name="dimabe_dte.custom_invoice" menu="True" paperformat="paper_format_letter_custom"
+            groups="dimabe_dte.custom_templates"
+            print_report_name="object._get_custom_report_name()"/>
+
+    <report id="action_custom_dispatch_guide" string="Guia de Despacho Custom" model="stock.picking"
+            report_type="qweb-pdf"
+            groups="dimabe_dte.custom_templates"
+            name="dimabe_dte.custom_dispatch_guide" menu="True" paperformat="paper_format_letter_custom"
+            print_report_name="object._get_custom_report_name()"/>
+
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_reversal_form_inherit" model="ir.ui.view">
+            <field name="name">account_move_reversal.inherit.form</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='reason']" position="after">
+                    <field name="is_jump_number"/>
+                    <field name="document_number" attrs="{'invisible':[('is_jump_number','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="account_move_reversal_l10n_latam_attributes" model="ir.ui.view">
+            <field name="name">account_move_reversal_l10n_latam_attributes</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_move_reversal"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="document_type_id" required="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
