@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'l10n_cl_edi', 'l10n_cl_edi_boletas', 'dimabe_clients', 'stock'],
+    'depends': ['base', 'l10n_cl_edi', 'l10n_cl_edi_boletas', 'stock'],
 
     # always loaded
     'data': [
