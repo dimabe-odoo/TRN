@@ -41,8 +41,8 @@ class StockMove(models.Model):
             data['debit'] = round(qty * cost) if self._is_out() else 0
             data['credit'] = round(qty * cost) if self._is_in() else 0
         if not cost and diff:
-            data['debit'] = abs(diff) if diff < 0 else 0
-            data['credit'] = abs(diff) if diff > 0 else 0
+            data['debit'] = abs(diff) if diff > 0 else 0
+            data['credit'] = abs(diff) if diff < 0 else 0
         data['account_id'] = account_id
         data['analytic_account_id'] = analytic_account_id
         data['currency_id'] = self.env.company.currency_id.id
