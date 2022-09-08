@@ -22,11 +22,14 @@ class StockMove(models.Model):
                     res.append((0, 0, line_data))
                     total += line_data['debit']
             if res[0][2]['credit'] != total:
-                diff = res[0][2]['credit'] - total
+                if total >  res[0][2]['credit']:
+                    diff = res[0][2]['debit'] - res[0][2]['credit']
+                else:
+                    diff = res[0][2]['credit'] - total
                 line_diff_cost = self.get_data(1, 'Diferencia', account_id=self.env.company.account_diff_id.id if self.env.company.account_diff_id else debit_account_id,
                                                analytic_account_id=self.env.company.analytic_account_diff_id.id,
                                                diff=diff)
-                res.append((0, 0, line_diff_cost))
+                res.append((0, 0, line_diff_cost))         
         return res
 
     def get_data(self, qty, description, cost=False, account_id=False, analytic_account_id=False, diff=False):
