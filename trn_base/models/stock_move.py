@@ -8,6 +8,8 @@ class StockMove(models.Model):
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
         res = super(StockMove, self)._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id,
                                                                 description)
+        if self.picking_id.picking_type_id.sequence_code == 'IN':
+            return res
         if self._is_out() and not self.picking_id.is_return:
             res.pop(1)
             total = 0
