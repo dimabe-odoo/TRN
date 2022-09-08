@@ -40,7 +40,7 @@ class StockMove(models.Model):
         data['product_uom_id'] = self.product_uom.id
         data['ref'] = description
         data['partner_id'] = self.picking_id.partner_id.id
-        if cost and not diff and not account_type:
+        if cost and not diff:
             data['debit'] = round(qty * cost) if self._is_out() else 0
             data['credit'] = round(qty * cost) if self._is_in() else 0
         if not cost and diff and account_type:
