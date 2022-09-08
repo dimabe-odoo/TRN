@@ -26,7 +26,7 @@ class StockMove(models.Model):
                     diff = res[0][2]['debit'] - res[0][2]['credit']
                 else:
                     diff = res[0][2]['credit'] - total
-                raise models.ValidationError(diff)
+                raise models.ValidationError(res)
                 line_diff_cost = self.get_data(1, 'Diferencia', account_id=self.env.company.account_diff_id.id if self.env.company.account_diff_id else debit_account_id,
                                                analytic_account_id=self.env.company.analytic_account_diff_id.id,
                                                diff=diff)
