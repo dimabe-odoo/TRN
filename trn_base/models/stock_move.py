@@ -32,7 +32,7 @@ class StockMove(models.Model):
                 res.append((0, 0, line_diff_cost))         
         return res
 
-    def get_data(self, qty, description, account_type='None', cost=False, account_id=False, analytic_account_id=False, diff=False):
+    def get_data(self, qty, description, account_type=False, cost=False, account_id=False, analytic_account_id=False, diff=False):
         data = {}
         data['name'] = description
         data['product_id'] = self.product_id.id
@@ -40,10 +40,10 @@ class StockMove(models.Model):
         data['product_uom_id'] = self.product_uom.id
         data['ref'] = description
         data['partner_id'] = self.picking_id.partner_id.id
-        if cost and not diff:
+        if cost and not diff and not account_type:
             data['debit'] = round(qty * cost) if self._is_out() else 0
             data['credit'] = round(qty * cost) if self._is_in() else 0
-        if not cost and diff:
+        if not cost and diff and account_type:
             data['debit'] = diff if account_type == 'debit' else 0
             data['credit'] = diff if account_type == 'credit' else 0
         data['account_id'] = account_id
