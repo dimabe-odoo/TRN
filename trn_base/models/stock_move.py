@@ -32,7 +32,7 @@ class StockMove(models.Model):
                 res.append((0, 0, line_diff_cost))         
         return res
 
-    def get_data(self, qty, description, account_type=False, cost=False, account_id=False, analytic_account_id=False, diff=False):
+    def get_data(self, qty, description, cost=False, account_id=False, analytic_account_id=False, diff=False, account_type=False):
         data = {}
         data['name'] = description
         data['product_id'] = self.product_id.id
