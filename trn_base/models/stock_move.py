@@ -22,18 +22,17 @@ class StockMove(models.Model):
                     res.append((0, 0, line_data))
                     total += line_data['debit']
             if res[0][2]['credit'] != total:
-                if total >  res[0][2]['credit']:
-                    diff = res[0][2]['debit'] - res[0][2]['credit']
-                else:
-                    diff = res[0][2]['credit'] - total
-                raise models.ValidationError(res)
-                line_diff_cost = self.get_data(1, 'Diferencia', account_id=self.env.company.account_diff_id.id if self.env.company.account_diff_id else debit_account_id,
+                diff = abs(res[0][2]['credit'] - total)
+                account_type = 'credit'
+                if total > res[0][2]['credit']:
+                 account_type = 'debit'
+                line_diff_cost = self.get_data(1, 'Diferencia', account_type=account_type, account_id=self.env.company.account_diff_id.id if self.env.company.account_diff_id else debit_account_id,
                                                analytic_account_id=self.env.company.analytic_account_diff_id.id,
                                                diff=diff)
                 res.append((0, 0, line_diff_cost))         
         return res
 
-    def get_data(self, qty, description, cost=False, account_id=False, analytic_account_id=False, diff=False):
+    def get_data(self, qty, description, account_type, cost=False, account_id=False, analytic_account_id=False, diff=False):
         data = {}
         data['name'] = description
         data['product_id'] = self.product_id.id
@@ -45,8 +44,8 @@ class StockMove(models.Model):
             data['debit'] = round(qty * cost) if self._is_out() else 0
             data['credit'] = round(qty * cost) if self._is_in() else 0
         if not cost and diff:
-            data['debit'] = diff
-            data['credit'] = 0
+            data['debit'] = diff if account_type == 'debit' else 0
+            data['credit'] = diff if account_type == 'credit' else 0
         data['account_id'] = account_id
         data['analytic_account_id'] = analytic_account_id
         data['currency_id'] = self.env.company.currency_id.id
