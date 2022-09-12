@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="l10n_cl_daily_sales_book_inherit_tree" model="ir.ui.view">
+      <field name="name">l10n_cl.daily.sales.book.tree</field>
+      <field name="model">l10n_cl.daily.sales.book</field>
+      <field name="inherit_id" ref="l10n_cl_edi_boletas.l10n_cl_daily_sales_book_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='company_id']" position="before">
+          <field name="l10n_cl_dte_status"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

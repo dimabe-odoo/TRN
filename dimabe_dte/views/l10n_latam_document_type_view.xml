@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <record id="view_document_type_tree" model="ir.ui.view">
+      <field name="name">l10n_latam.document.type.tree</field>
+      <field name="model">l10n_latam.document.type</field>
+      <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_tree"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='country_id']" position="after">
+          <field name="first_caf_loaded"/>
+          <field name="last_caf_available"/>
+          <field name="cafs_not_loaded"/>
+          <field name="last_caf_consumed"/>
+          <field name="remaining_caf"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

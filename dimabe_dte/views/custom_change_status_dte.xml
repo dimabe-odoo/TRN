@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="custom_change_status_notification" model="ir.ui.view">
+            <field name="name">custom.change.status.dte.form</field>
+            <field name="model">custom.collection.group</field>
+            <field name="arch" type="xml">
+                <form string="Notificacion Reclamo DTE">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="Title"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="user_ids">
+                                <tree>
+                                    <field name="login"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="custom_notificaciton_status_noti_group_act_window" model="ir.actions.act_window">
+            <field name="name">Grupo Notificación de Reclamo DTE</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">custom.collection.group</field>
+            <field name="view_mode">form</field>
+            <field name="res_id" ref="custom_noti_claimed_dte"/>
+        </record>
+
+        <menuitem name="Configuracion Notificacion Reclamo DTE" id="custom_notificacition_change_status" parent="account.menu_finance_configuration"
+                  action="custom_notificaciton_status_noti_group_act_window"/>
+
+    </data>
+</odoo>

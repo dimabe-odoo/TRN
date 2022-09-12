@@ -18,3 +18,5 @@ class StockPicking(models.Model):
                 return
             if item.picking_type_code == 'outgoing':
                 item.is_return = item.location_dest_id and item.location_dest_id.usage == 'supplier'
+                return
+            item.is_return = False
