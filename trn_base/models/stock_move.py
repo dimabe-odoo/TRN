@@ -10,7 +10,7 @@ class StockMove(models.Model):
                                                                 description)
         if qty == 0:
             return res
-        if self._is_out() and not self.picking_id.is_return:
+        if self._is_out():
             res.pop(1)
             total = 0
             for line in self.move_line_ids:
