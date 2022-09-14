@@ -20,7 +20,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'purchase', 'stock', 'hr'],
+    'depends': ['base', 'purchase', 'stock', 'hr', 'web'],
 
     # always loaded
     'data': [
@@ -38,4 +38,9 @@
     'demo': [
         'demo/demo.xml',
     ],
+    "assets": {
+        "web.assets_common": [
+            "trn_base/static/css/trn_base.scss",
+        ],
+    },
 }
