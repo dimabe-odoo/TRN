@@ -62,6 +62,7 @@ class AccountPurchaseLine(models.Model):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
+            
             'res_model': 'wizard.select.account.line',
             'views': [(view_id.id, 'form')],
             'view_id': view_id.id,
