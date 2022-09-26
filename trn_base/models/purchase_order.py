@@ -13,7 +13,7 @@ class PurchaseOrder(models.Model):
     
     @api.model
     def create(self, values):
-        values['notes'] = f'Estimado proveedor, favor realizar el envío de facturas al correo: {self.env.company.l10n_cl_dte_email}'
+        values['notes'] = 'Estimado proveedor, favor realizar el envío de facturas al correo: facturacion@trn.cl'
         res = super(PurchaseOrder, self).create(values)
         return res
 
