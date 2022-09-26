@@ -8,7 +8,7 @@ class CustomCollectionGroup(models.Model):
 
     user_ids = fields.Many2many('res.users', string='Usuarios')
 
-    group_id = fields.Many2one('res.groups',String="Grupo")
+    group_id = fields.Many2one('res.groups', string="Grupo")
 
     def write(self, values):
         res = super(CustomCollectionGroup, self).write(values)

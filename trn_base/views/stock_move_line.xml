@@ -56,5 +56,18 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_stock_move_line_search_view" model="ir.ui.view">
+            <field name="name">Filtros Movimientos de Producto</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="category_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='groupby_product_id']" position="after">
+                    <filter string="Categoria de Producto" name="group_by_category_id" context="{'group_by': 'category_id'}"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

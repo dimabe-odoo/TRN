@@ -23,6 +23,7 @@ class StockMoveLine(models.Model):
     stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
     employee_id = fields.Many2one('hr.employee', string="Retirado por")
+    category_id = fields.Many2one('product.category', string='Categoria')
 
     @api.onchange('product_id')
     def onchange_product_requested(self):
@@ -78,6 +79,11 @@ class StockMoveLine(models.Model):
 
     @api.model
     def create(self, vals_list):
+        if 'product_id' in vals_list.keys():
+            product = self.env['product.product'].sudo().search([('id', '=', vals_list['product_id'])])
+            if product:
+                if product.categ_id:
+                    vals_list['category_id'] = product.categ_id.id
         if 'picking_id' in vals_list.keys():
             picking_id = self.env['stock.picking'].sudo().search([('id', '=', vals_list['picking_id'])])
             product_id = self.env['product.product'].sudo().search([('id', '=', vals_list['product_id'])])
