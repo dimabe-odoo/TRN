@@ -9,14 +9,14 @@
                        position="after">
                     <field name="picking_code" invisible="1" optional="show"/>
                     <field name="is_return_line" invisible="1" optional="show"/>
-                    <field name="product_requested_qty" optional="show" />
+                    <field name="product_requested_qty" optional="show"/>
                     <field name="analytic_account" optional="show"
-                        attrs="{'required': [('picking_code','=','outgoing'),('is_return_line','=',True)],'invisible': [('picking_code','!=','outgoing'),('is_return_line','=',False)]}"/>
+                           attrs="{'required': [('picking_code','=','outgoing'),('is_return_line','=',True)],'invisible': [('picking_code','!=','outgoing'),('is_return_line','=',False)]}"/>
                     <field name="supplier_lot" optional="show"
                            attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}"/>
                     <field name="stock_product_lot_ids" optional="show" invisible="1"/>
                     <field name="product_stock_qty" optional="show"/>
-                    <field name="employee_id" />
+                    <field name="employee_id"/>
                 </xpath>
                 <xpath expr="//field[@name='lot_name']" position="attributes">
                     <attribute name="readonly">1</attribute>
@@ -65,7 +65,8 @@
                     <field name="category_id"/>
                 </xpath>
                 <xpath expr="//filter[@name='groupby_product_id']" position="after">
-                    <filter string="Categoria de Producto" name="group_by_category_id" context="{'group_by': 'category_id'}"/>
+                    <filter string="Categoria de Producto" name="group_by_category_id"
+                            context="{'group_by': 'category_id'}"/>
                 </xpath>
             </field>
         </record>
