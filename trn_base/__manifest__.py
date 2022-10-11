@@ -34,6 +34,7 @@
         'views/res_company.xml',
         'reports/picking_report.xml',
         'views/stock_quant.xml',
+        'wizards/stock_return_picking.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
