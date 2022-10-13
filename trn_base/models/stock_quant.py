@@ -27,7 +27,7 @@ class StockQuant(models.Model):
     def write(self, vals):
         res = super(StockQuant, self).write(vals)
         for item in self:
-            stock_company = sum(quant.quantity for quant in res.product_id.stock_quant_ids.filtered(lambda x: x.company_id.id == self.env.company.id))
+            stock_company = sum(quant.quantity for quant in self.product_id.stock_quant_ids.filtered(lambda x: x.company_id.id == self.env.company.id))
             diff = stock_company - item.product_id.product_tmpl_id.orderpoint_id.product_min_qty
             item.product_id.product_tmpl_id.write({
                 'stock_diff_qty_company': diff,
