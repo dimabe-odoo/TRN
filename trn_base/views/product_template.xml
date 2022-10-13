@@ -6,14 +6,14 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='uom_id']" position="before">
-                <field name="stock_min_qty"/>
-                <field name="stock_diff_qty"/>
-                <field name="state_stock" invisible="1"/>
+                <field name="stock_min_qty_company"/>
+                <field name="stock_diff_qty_company"/>
+                <field name="state_stock_company" invisible="1"/>
             </xpath>
             <xpath expr="//tree" position="attributes">
-                <attribute name="decoration-danger">state_stock in ('under_minimum')</attribute>
-                <attribute name="decoration-success">state_stock in ('over_minimum')</attribute>
-                <attribute name="decoration-warning">state_stock in ('at_minimum')</attribute>
+                <attribute name="decoration-danger">state_stock_company in ('under_minimum')</attribute>
+                <attribute name="decoration-success">state_stock_company in ('over_minimum')</attribute>
+                <attribute name="decoration-warning">state_stock_company in ('at_minimum')</attribute>
             </xpath>
         </field>
     </record>
@@ -24,8 +24,8 @@
         <field name="inherit_id" ref="product.product_template_search_view"/>
         <field name="arch" type="xml">
             <xpath expr="//separator[3]" position="after">
-                <filter string="Productos con stock critico" name="state_stock"
-                        domain="[('state_stock','in',('under_minimum','in_minimum'))]"/>
+                <filter string="Productos con stock critico" name="state_stock_company"
+                        domain="[('state_stock_company','in',('under_minimum','in_minimum'))]"/>
             </xpath>
         </field>
     </record>
