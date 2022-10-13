@@ -11,7 +11,7 @@
                     <field name="is_return_line" invisible="1" optional="show"/>
                     <field name="product_requested_qty" optional="show"/>
                     <field name="analytic_account" optional="show"
-                           attrs="{'required': [('picking_code','=','outgoing'),('is_return_line','=',True)],'invisible': [('picking_code','!=','outgoing'),('is_return_line','=',False)]}"/>
+                           attrs="{'required': ['|',('picking_code','=','outgoing'),('is_return_line','=',True)],'invisible': [('picking_code','!=','outgoing'),('is_return_line','=',False)]}"/>
                     <field name="supplier_lot" optional="show"
                            attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}"/>
                     <field name="stock_product_lot_ids" optional="show" invisible="1"/>
