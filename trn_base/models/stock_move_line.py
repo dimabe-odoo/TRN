@@ -67,10 +67,11 @@ class StockMoveLine(models.Model):
                     if item.product_requested_qty < item.qty_done:
                         raise models.ValidationError(get_message(item.product_requested_qty, item.qty_done))
                 if not item.analytic_account and item.picking_code == 'outgoing':
-                    raise models.UserError(
-                        f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta '
-                        f'analítica,'
-                        f' por lo cual no se puede finalizar la orden de entrega')
+                    if item.location_dest_id.usage != 'supplier':
+                        raise models.UserError(
+                            f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta '
+                            f'analítica,'
+                            f' por lo cual no se puede finalizar la orden de entrega')
             item.write({
                 'product_unit_cost': item.product_id.standard_price,
                 'product_total_cost': item.product_id.standard_price * item.qty_done

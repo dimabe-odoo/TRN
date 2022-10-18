@@ -15,20 +15,23 @@ class StockQuant(models.Model):
                     vals_list['category_id'] = product.categ_id.id
         res = super(StockQuant, self).create(vals_list)
         if 'quantity' in vals_list.keys():
-            diff = res.product_id.product_tmpl_id.qty_available - res.product_id.product_tmpl_id.stock_min_qty
-            res.product_id.product_tmpl_id.write({
-                'stock_diff_qty': diff,
-                'state_stock': self.get_state_stock(diff)
-            })
+            if res.product_id.product_tmpl_id.order_point_id:
+                stock_company = sum(quant.quantity for quant in res.product_id.stock_quant_ids.filtered(lambda x: x.company_id.id == self.env.company.id))
+                diff = stock_company - res.product_id.product_tmpl_id.order_point_id.product_min_qty
+                res.product_id.product_tmpl_id.write({
+                    'stock_diff_qty_company': diff,
+                    'state_stock_company': self.get_state_stock(diff)
+                })
         return res
 
     def write(self, vals):
         res = super(StockQuant, self).write(vals)
         for item in self:
-            diff = item.product_id.product_tmpl_id.qty_available - item.product_id.product_tmpl_id.stock_min_qty
+            stock_company = sum(quant.quantity for quant in self.product_id.stock_quant_ids.filtered(lambda x: x.company_id.id == self.env.company.id))
+            diff = stock_company - item.product_id.product_tmpl_id.order_point_id.product_min_qty
             item.product_id.product_tmpl_id.write({
-                'stock_diff_qty': diff,
-                'state_stock': item.get_state_stock(diff)
+                'stock_diff_qty_company': diff,
+                'state_stock_company': item.get_state_stock(diff),
             })
         return res
 
