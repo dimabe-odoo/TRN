@@ -17,7 +17,7 @@ class StockQuant(models.Model):
         if 'quantity' in vals_list.keys():
             if res.product_id.product_tmpl_id.order_point_id:
                 stock_company = sum(quant.quantity for quant in res.product_id.stock_quant_ids.filtered(lambda x: x.company_id.id == self.env.company.id))
-                diff = stock_company - res.product_id.product_tmpl_id.orderpoint_id.product_min_qty
+                diff = stock_company - res.product_id.product_tmpl_id.order_point_id.product_min_qty
                 res.product_id.product_tmpl_id.write({
                     'stock_diff_qty_company': diff,
                     'state_stock_company': self.get_state_stock(diff)

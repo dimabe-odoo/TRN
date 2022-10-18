@@ -7,9 +7,9 @@ class StockWarehouseOrderpoint(models.Model):
     @api.model
     def create(self, vals_list):
         res = super(StockWarehouseOrderpoint, self).create(vals_list)
-        if not res.product_id.product_tmpl_id.orderpoint_id:
+        if not res.product_id.product_tmpl_id.order_point_id:
             res.product_id.product_tmpl_id.write({
-                'orderpoint_id': res.id
+                'order_point_id': res.id
             })
         return res
 
