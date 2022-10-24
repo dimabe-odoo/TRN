@@ -181,16 +181,18 @@
                                 <th style="width:10%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;margin-left: 4px;">
                                     CANTIDAD
                                 </th>
-                                <th style="width:58%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px; margin-left: 4px;">
-                                    DESCRIPCIÓN
-                                </th>
                                 <th style="border-right:1px solid;border-bottom:1px solid; padding-top: 6px; margin-left: 4px;">
                                     UdM
+                                </th>
+                                <th style="width:58%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px; margin-left: 4px;">
+                                    DESCRIPCIÓN
                                 </th>
                                 <th style="width:12%;border-right:1px solid; border-bottom:1px solid;padding-top: 6px; margin-left: 4px;">
                                     VALOR UNIT.
                                 </th>
-                                <th style="width:12%;border-bottom:1px solid;padding-top: 6px; margin-left: 4px;">TOTAL</th>
+                                <th style="width:12%;border-bottom:1px solid;padding-top: 6px; margin-left: 4px;">
+                                    TOTAL
+                                </th>
                             </tr>
                             <t t-foreach="d.order_line" t-as="line">
                                 <tr>
@@ -208,32 +210,18 @@
                                         <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;">
                                             <span t-esc="line_index + 1"/>
                                         </td>
-                                        <t t-if="line.product_qty.is_integer()">
-                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="int(line.product_qty)"/>
-                                            </td>
-                                        </t>
-                                        <t t-else="">
-                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="line.product_qty"/>
-                                            </td>
-                                        </t>
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
-                                            <span t-field="line.name"/>
+                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                            <span t-esc="d.format_qty(line.product_qty)"/>
                                         </td>
                                         <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
                                             <span t-field="line.product_uom.name"/>
                                         </td>
-                                        <t t-if="d.currency_id == res_company.currency_id">
-                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="d.roundclp(line.price_unit)"/>
-                                            </td>
-                                        </t>
-                                        <t t-else="">
-                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="line.price_unit"/>
-                                            </td>
-                                        </t>
+                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
+                                            <span t-field="line.name"/>
+                                        </td>
+                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                            <span t-esc="d.format_usd(line.price_unit)"/>
+                                        </td>
                                         <t t-if="d.currency_id == res_company.currency_id">
                                             <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
                                                 <span t-esc="d.roundclp(line.price_subtotal)"/>
@@ -241,7 +229,7 @@
                                         </t>
                                         <t t-else="">
                                             <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="line.price_subtotal"/>
+                                                <span t-esc="d.format_usd(line.price_subtotal)"/>
                                             </td>
                                         </t>
                                     </t>
@@ -292,7 +280,7 @@
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: right;width:70%;">
-                                            <span style="margin-right:4px;" t-esc="d.amount_untaxed"/>
+                                            <span style="margin-right:4px;" t-esc="d.format_usd(d.amount_untaxed)"/>
                                         </td>
                                     </t>
                                 </tr>
@@ -321,7 +309,7 @@
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: right;width:70%;">
-                                            <span t-esc="d.amount_untaxed" style="margin-right:4px;"/>
+                                            <span t-esc="d.format_usd(d.amount_untaxed)" style="margin-right:4px;"/>
                                         </td>
                                     </t>
                                 </tr>
@@ -339,7 +327,7 @@
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: right;width:70%;">
-                                            <span t-esc="d.amount_tax" style="margin-right:4px;"/>
+                                            <span t-esc="d.format_usd(d.amount_tax)" style="margin-right:4px;"/>
                                         </td>
                                     </t>
                                 </tr>
@@ -357,7 +345,7 @@
                                     </t>
                                     <t t-else="">
                                         <td style="text-align: right;width:70%;">
-                                            <span t-esc="d.amount_total" style="margin-right:4px;"/>
+                                            <span t-esc="d.format_usd(d.amount_total)" style="margin-right:4px;"/>
                                         </td>
                                     </t>
                                 </tr>

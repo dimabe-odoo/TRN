@@ -1,12 +1,18 @@
 from venv import create
 from odoo import fields, models, api
-from ..utils.roundformat_clp import round_clp
+from ..utils.roundformat_clp import round_clp, format_usd, format_qty
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
     def roundclp(self, value):
         return round_clp(value)
+
+    def format_usd(self, value):
+        return format_usd(value)
+
+    def format_qty(self, qty):
+        return format_qty(qty)
 
     def _get_custom_report_name(self):
         return '%s %s' % ('Órden de Compra - ', self.name)

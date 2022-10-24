@@ -1,5 +1,6 @@
 from math import floor, ceil
-
+import locale
+from odoo.http import request
 
 def round_clp(value):
     value_str = str(value)
@@ -16,5 +17,21 @@ def round_clp(value):
     else:
         return format_clp(value)
 
+
 def format_clp(value):
     return '{:,}'.format(value).replace(',', '.')
+
+
+def format_usd(value):
+    locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
+    locale._override_localeconv = {'mon_thousands_sep': '.'}
+    value_str = locale.currency(value, symbol=False, grouping=True)
+    return value_str
+
+def format_qty(value):
+    locale.setlocale(locale.LC_ALL, 'es_ES.utf8')
+    locale._override_localeconv = {'mon_thousands_sep': '.'}
+    value_str = locale.currency(value, symbol=False, grouping=True)
+    if '00' == value_str[-2:]:
+        return value_str[:-3]
+    return value_str
