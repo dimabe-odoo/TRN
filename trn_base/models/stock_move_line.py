@@ -63,6 +63,8 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for item in self:
+            if item.picking_id.date_done:
+                date_done = item.picking_id.date_done
             if item.picking_id:
                 if item.picking_id.note or item.picking_id.note != '':
                     item.write({
@@ -81,7 +83,13 @@ class StockMoveLine(models.Model):
                 'product_unit_cost': item.product_id.standard_price,
                 'product_total_cost': item.product_id.standard_price * item.qty_done
             })
-        return super(StockMoveLine, self)._action_done()
+        res = super(StockMoveLine, self)._action_done()
+        for item in self:
+            if item.picking_id.date_done:
+                item.write({
+                    'date': date_done
+                })
+        return res
 
     @api.model
     def create(self, vals_list):

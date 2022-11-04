@@ -31,7 +31,9 @@
                 <xpath expr="//sheet" position="attributes">
                     <attribute name="class">oe_form_sheet_width_wider</attribute>
                 </xpath>
-
+                <xpath expr="//field[@name='date_done']" position="after">
+                    <field name="date_done"/>
+                </xpath>
             </field>
         </record>
     </data>

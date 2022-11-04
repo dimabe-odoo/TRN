@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 from ..utils.date_utils_format import get_date_spanish
 import xlsxwriter
-
+from datetime import datetime
 import pandas as pd
 
 
@@ -11,6 +11,8 @@ class StockPicking(models.Model):
     is_return = fields.Boolean('Es Devolución', compute='compute_is_return')
 
     picking_return_id = fields.Many2one('stock.picking')
+
+    date_done = fields.Datetime(readonly=False)
 
     @api.depends('location_id', 'location_dest_id')
     def compute_is_return(self):
@@ -25,9 +27,22 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         res = super(StockPicking, self).button_validate()
-        for move in self.move_ids_without_package:
-            account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
-            if account_move_id.state == 'draft':
-                account_move_id.action_post()
+        # for move in self.move_ids_without_package:
+        #     account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
+        #     if account_move_id.state == 'draft':
+        #         account_move_id.action_post()
         return res
 
+    def _action_done(self):
+        if self:
+            for item in self:
+                if item.date_done:
+                    date_done = item.date_done
+        res = super(StockPicking, self)._action_done()
+        if self:
+            for item in self:
+                if item.date_done:
+                    item.write({
+                        'date_done': date_done
+                    })
+        return res
