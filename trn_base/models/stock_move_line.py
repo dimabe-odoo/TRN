@@ -63,7 +63,7 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for item in self:
-            if item.picking_id.date_done:
+            if item.picking_id.delayed_picking:
                 date_done = item.picking_id.date_done
             if item.picking_id:
                 if item.picking_id.note or item.picking_id.note != '':

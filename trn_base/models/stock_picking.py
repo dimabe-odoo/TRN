@@ -14,6 +14,9 @@ class StockPicking(models.Model):
 
     date_done = fields.Datetime(readonly=False)
 
+    delayed_picking = fields.Boolean('Operacion Diferido',
+                                     help="Habilitar la opcion de definir la fecha efectiva de la operacion")
+
     @api.depends('location_id', 'location_dest_id')
     def compute_is_return(self):
         for item in self:
@@ -36,12 +39,12 @@ class StockPicking(models.Model):
     def _action_done(self):
         if self:
             for item in self:
-                if item.date_done:
+                if item.delayed_picking:
                     date_done = item.date_done
         res = super(StockPicking, self)._action_done()
         if self:
             for item in self:
-                if item.date_done:
+                if item.delayed_picking:
                     item.write({
                         'date_done': date_done
                     })

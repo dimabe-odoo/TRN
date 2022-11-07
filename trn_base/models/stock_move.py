@@ -8,13 +8,13 @@ class StockMove(models.Model):
     def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id,
                                    cost):
         if self:
-            if self.picking_id.date_done:
+            if self.picking_id.delayed_picking:
                 date_done = self.picking_id.date_done.date()
         res = super(StockMove, self)._prepare_account_move_vals(credit_account_id, debit_account_id, journal_id, qty, description, svl_id,
                                    cost)
         if self:
-            if self.picking_id.date_done:
-                res['date'] = date_done
+            if self.picking_id.delayed_picking:
+                res['date'] = self.picking_id.date_done.date()
         return res
 
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
