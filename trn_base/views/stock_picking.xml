@@ -31,7 +31,7 @@
                 <xpath expr="//sheet" position="attributes">
                     <attribute name="class">oe_form_sheet_width_wider</attribute>
                 </xpath>
-                <xpath expr="//field[@name='date_done']" position="after">
+                <xpath expr="//field[@name='date_done']" position="replace">
                     <field name="delayed_picking"/>
                     <field name="date_done"
                            attrs="{'invisible': [('delayed_picking','=', False)], 'readonly': ['&amp;', ('delayed_picking','=',True), ('state','=','done'),'|',('state','=','done')], 'required': [('delayed_picking','=', True)]}"/>
