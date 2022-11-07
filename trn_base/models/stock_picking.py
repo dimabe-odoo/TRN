@@ -37,8 +37,6 @@ class StockPicking(models.Model):
         return res
 
     def write(self, vals):
-        if self.state == 'done' and 'date_done' in vals.keys():
-            raise models.ValidationError('No se puede modificar la fecha efectiva una vez realizada la operación')
         return super(StockPicking, self).write(vals)
 
     def _action_done(self):
