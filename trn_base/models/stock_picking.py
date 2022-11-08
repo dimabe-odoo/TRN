@@ -26,7 +26,7 @@ class StockPicking(models.Model):
     def button_validate(self):
         res = super(StockPicking, self).button_validate()
         for move in self.move_ids_without_package:
-            account_move_id = self.env['account.move'].search([('stock_move_id','=',move.id)])
+            account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
             if account_move_id.state == 'draft':
                 account_move_id.action_post()
         return res

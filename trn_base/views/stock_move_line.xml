@@ -70,5 +70,15 @@
                 </xpath>
             </field>
         </record>
+        <record id="view_stock_move_line_form_inherit" model="ir.ui.view">
+            <field name="name">Formulario Movimientos de Producto</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='lot_id']" position="after">
+                    <field name="notes"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>

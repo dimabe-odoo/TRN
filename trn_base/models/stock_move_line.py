@@ -24,6 +24,7 @@ class StockMoveLine(models.Model):
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
     employee_id = fields.Many2one('hr.employee', string="Retirado por")
     category_id = fields.Many2one('product.category', string='Categoria')
+    notes = fields.Html('Observacion')
 
     @api.onchange('product_id')
     def onchange_product_requested(self):
@@ -63,6 +64,10 @@ class StockMoveLine(models.Model):
     def _action_done(self):
         for item in self:
             if item.picking_id:
+                if item.picking_id.note or item.picking_id.note != '':
+                    item.write({
+                        'notes': item.picking_id.note
+                    })
                 if item.product_requested_qty > 0:
                     if item.product_requested_qty < item.qty_done:
                         raise models.ValidationError(get_message(item.product_requested_qty, item.qty_done))
