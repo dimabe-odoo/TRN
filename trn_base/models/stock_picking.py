@@ -43,6 +43,8 @@ class StockPicking(models.Model):
         if self:
             for item in self:
                 if item.delayed_picking:
+                    if item.date_done > datetime.now():
+                        raise models.UserError('No puede realizar una operacion a una fecha posterior a la actual.')
                     date_done = item.date_done
         res = super(StockPicking, self)._action_done()
         if self:
