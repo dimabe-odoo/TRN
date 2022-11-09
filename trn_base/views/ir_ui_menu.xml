@@ -6,4 +6,10 @@
     <record id="stock.menu_warehouse_report" model="ir.ui.menu">
         <field name="groups_id" eval="[(5)]"/>
     </record>
+    <record id="purchase.purchase_report_main" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4 , ref('purchase.group_purchase_user'))]"/>
+    </record>
+    <record id="purchase.purchase_report" model="ir.ui.menu">
+        <field name="groups_id" eval="[(4 , ref('purchase.group_purchase_user'))]"/>
+    </record>
 </odoo>
