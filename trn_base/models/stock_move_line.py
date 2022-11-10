@@ -85,7 +85,7 @@ class StockMoveLine(models.Model):
             })
         res = super(StockMoveLine, self)._action_done()
         for item in self:
-            if item.picking_id.date_done:
+            if item.picking_id.delayed_picking:
                 item.write({
                     'date': date_done
                 })

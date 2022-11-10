@@ -25,6 +25,7 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'security/groups.xml',
         'reports/purchase_order.xml',
         'views/stock_move_line.xml',
         'views/stock_picking.xml',
@@ -36,7 +37,6 @@
         'views/stock_quant.xml',
         'wizards/stock_return_picking.xml',
         'views/stock_valuation_layer.xml',
-        'security/groups.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
