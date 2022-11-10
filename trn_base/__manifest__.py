@@ -36,6 +36,7 @@
         'views/stock_quant.xml',
         'wizards/stock_return_picking.xml',
         'views/stock_valuation_layer.xml',
+        'security/groups.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
