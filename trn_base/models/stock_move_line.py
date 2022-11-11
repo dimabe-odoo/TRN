@@ -63,6 +63,7 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for item in self:
+            standard_price = item.product_id.standard_price
             if item.picking_id.delayed_picking:
                 date_done = item.picking_id.date_done
             if item.picking_id:
@@ -79,18 +80,20 @@ class StockMoveLine(models.Model):
                             f'El movimiento del producto {item.product_id.display_name} no tiene definida la cuenta '
                             f'analítica,'
                             f' por lo cual no se puede finalizar la orden de entrega')
+                if item.move_id.purchase_line_id:
+                    standard_price = item.move_id.purchase_line_id.price_unit
             item.write({
-                'product_unit_cost': item.product_id.standard_price,
-                'product_total_cost': item.product_id.standard_price * item.qty_done
+                'product_unit_cost': standard_price,
+                'product_total_cost': standard_price * item.qty_done
             })
         res = super(StockMoveLine, self)._action_done()
         for item in self:
-            if item.picking_id.date_done:
+            if item.picking_id.delayed_picking:
                 item.write({
                     'date': date_done
                 })
         return res
-
+    
     @api.model
     def create(self, vals_list):
         if 'product_id' in vals_list.keys():
