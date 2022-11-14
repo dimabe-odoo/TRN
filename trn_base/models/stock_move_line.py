@@ -93,7 +93,7 @@ class StockMoveLine(models.Model):
                     'date': date_done
                 })
         return res
-
+    
     @api.model
     def create(self, vals_list):
         if 'product_id' in vals_list.keys():
