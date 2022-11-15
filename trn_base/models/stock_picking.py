@@ -64,43 +64,15 @@ class StockPicking(models.Model):
                 layer_ids = self.env['stock.valuation.layer'].sudo().search(
                     [('product_id.id', '=', product.id), ('company_id.id', '=', self.env.company.id)])
                 if len(layer_ids) > 0:
-                    remaining_qty = 0
-                    counter = 0
                     for layer in layer_ids:
                         try:
                             if layer.quantity < 0:
-                                layer_in_ids = layer_ids.filtered(lambda x: x.quantity > 0)
-                                if remaining_qty == 0:
-                                    remaining_qty = layer_in_ids[counter].quantity
-                                if (remaining_qty + layer.quantity) <= 0:
-                                    first_qty = remaining_qty
-                                    first_cost = layer_in_ids[counter].unit_cost
-                                remaining_qty += layer.quantity
-                                if remaining_qty <= 0:
-                                    diff = remaining_qty
-                                    if diff < 0:
-                                        counter += 1 if len(layer_in_ids) > 1 else 0
-                                        remaining_qty = layer_in_ids[counter].quantity
-                                        remaining_qty += diff
-                                        first_value = first_cost * first_qty
-                                        second_value = layer_in_ids[counter].unit_cost * abs(diff)
-                                        total_layer = first_value + second_value
-                                        unit_cost = total_layer / layer.quantity
-                                        layer.write({
-                                            'value': total_layer * -1,
-                                            'unit_cost': unit_cost
-                                        })
-                                        continue
-                                if remaining_qty >= 0:
-                                    unit_cost = layer_in_ids[counter].unit_cost
-                                    total_layer = self.env.company.currency_id.round(unit_cost * layer.quantity)
-                                    layer.write({
-                                        'unit_cost': unit_cost,
-                                        'value': total_layer
-                                    })
-                                    if remaining_qty == 0 and layer_in_ids[counter].id != layer_in_ids[-1].id:
-                                        counter += 1 if len(layer_in_ids) > 1 else 0
-                                    continue
+                                quantity_taken = abs(layer.quantity)
+                                fifo_value = product._run_fifo(quantity_taken, layer.company_id)
+                                layer.write({
+                                    'unit_cost': fifo_value['unit_cost'],
+                                    'value': fifo_value['value']
+                                })
                             if layer.quantity > 0 and layer.stock_move_id.origin_returned_move_id:
                                 origin_move_id = layer.stock_move_id.origin_returned_move_id
                                 if len(origin_move_id.stock_valuation_layer_ids.filtered(lambda x: x.unit_cost > 0)):
@@ -117,7 +89,7 @@ class StockPicking(models.Model):
                             print(e)
 
     def for_incoming_fix(self):
-        product_ids = self.env['product.product'].sudo().search([('id', '=', 12568)])
+        product_ids = self.env['product.product'].sudo().search([('type', '=', 'product')])
         for product in product_ids:
             if product.standard_price == 0:
                 layer_ids = self.env['stock.valuation.layer'].sudo().search(
@@ -136,5 +108,127 @@ class StockPicking(models.Model):
                             last_incoming_layer_id = layer_ids.filtered(lambda x: x.quantity > 0 and x.unit_cost > 0)
                             if last_incoming_layer_id:
                                 product.write({
-                                    'standard_price': last_incoming_layer_id.unit_cost
+                                    'standard_price': last_incoming_layer_id[0].unit_cost
                                 })
+
+    def generate_layer_move(self):
+        layer_ids = self.env['stock.valuation.layer'].sudo().search([('company_id.id', '=', self.env.company.id)])
+        for layer in layer_ids:
+            if layer.quantity < 0:
+                total_layer = abs(layer.value)
+                have_move = False
+                if layer.account_move_id:
+                    if layer.account_move_id.amount_total != layer.value:
+                        layer.account_move_id.button_draft()
+                        layer.account_move_id.line_ids.unlink()
+                        move_id = layer.account_move_id
+                        have_move = True
+                else:
+                    move_id = self.env['account.move'].sudo().create({
+                        'date': layer.create_date.date(),
+                        'journal_id': layer.product_id.categ_id.property_stock_journal.id,
+                        'move_type': 'entry',
+                        'ref': layer.description,
+                        'company_id': self.env.company.id,
+                    })
+                if (layer.account_move_id.amount_total != layer.value and have_move) or not have_move:
+                    line_ids = []
+                    credit_line = {
+                        'credit': total_layer,
+                        'debit': 0,
+                        'account_id': layer.product_id.categ_id.property_stock_account_output_categ_id.id,
+                        'move_id': move_id.id,
+                        'product_id': layer.product_id.id,
+                        'quantity': abs(layer.quantity),
+                        'name': layer.description,
+                    }
+                    line_ids.append(credit_line)
+                    for line in layer.stock_move_id.move_line_ids:
+                        total = self.env.company.currency_id.round(layer.unit_cost * line.qty_done)
+                        debit_line = {
+                            'debit': total,
+                            'credit': 0,
+                            'quantity': line.qty_done,
+                            'account_id': layer.product_id.categ_id.property_stock_account_output_categ_id.id,
+                            'analytic_account_id': line.analytic_account.id,
+                            'move_id': move_id.id,
+                            'product_id': layer.product_id.id,
+                            'name': layer.description,
+                        }
+                        line_ids.append(debit_line)
+                    total_debit = sum(deb['debit'] for deb in line_ids)
+                    diff = abs(total_layer) - total_debit
+                    if diff != 0:
+                        account_id = self.env.company.account_diff_id.id if self.env.company.account_diff_id else layer.product_id.categ_id.property_stock_account_output_categ_id.id
+                        diff_line = {
+                            'account_id': account_id,
+                            'name': 'Diferencia {}'.format(layer.description),
+                            'debit': abs(diff) if diff > 0 else 0,
+                            'credit': abs(diff) if diff < 0 else 0,
+                            'move_id': move_id.id,
+                            'product_id': layer.product_id.id,
+                        }
+                        line_ids.append(diff_line)
+                    self.env['account.move.line'].sudo().create(line_ids)
+                    move_id.action_post()
+                    if not layer.account_move_id:
+                        layer.write({
+                            'account_move_id': move_id.id
+                        })
+            if layer.quantity > 0:
+                total_layer = layer.value
+                if layer.account_move_id:
+                    layer.account_move_id.button_draft()
+                    layer.account_move_id.line_ids.unlink()
+                    move_id = layer.account_move_id
+                else:
+                    move_id = self.env['account.move'].sudo().create({
+                        'date': layer.create_date.date(),
+                        'journal_id': layer.product_id.categ_id.property_stock_journal.id,
+                        'move_type': 'entry',
+                        'ref': layer.description,
+                        'company_id': self.env.company.id,
+                    })
+                line_ids = []
+                credit_line = {
+                    'credit': total_layer,
+                    'debit': 0,
+                    'account_id': layer.product_id.categ_id.property_stock_account_input_categ_id.id,
+                    'move_id': move_id.id,
+                    'product_id': layer.product_id.id,
+                    'quantity': abs(layer.quantity),
+                    'name': layer.description,
+                }
+                line_ids.append(credit_line)
+                for line in layer.stock_move_id.move_line_ids:
+                    total = self.env.company.currency_id.round(layer.unit_cost * line.qty_done)
+                    debit_line = {
+                        'debit': total,
+                        'credit': 0,
+                        'quantity': line.qty_done,
+                        'account_id': layer.product_id.categ_id.property_stock_valuation_account_id.id,
+                        'analytic_account_id': line.analytic_account.id,
+                        'move_id': move_id.id,
+                        'product_id': layer.product_id.id,
+                        'name': layer.description,
+                    }
+                    line_ids.append(debit_line)
+                total_debit = sum(deb['debit'] for deb in line_ids)
+                diff = abs(total_layer) - total_debit
+                if diff != 0:
+                    account_id = self.env.company.account_diff_id.id if self.env.company.account_diff_id else layer.product_id.categ_id.property_stock_account_input_categ_id.id
+                    diff_line = {
+                        'account_id': account_id,
+                        'name': 'Diferencia {}'.format(layer.description),
+                        'debit': abs(diff) if diff > 0 else 0,
+                        'credit': abs(diff) if diff < 0 else 0,
+                        'move_id': move_id.id,
+                        'product_id': layer.product_id.id,
+                    }
+                    line_ids.append(diff_line)
+                self.env['account.move.line'].sudo().create(line_ids)
+                move_id.action_post()
+                if not layer.account_move_id:
+                    layer.write({
+                        'account_move_id': move_id.id
+                    })
