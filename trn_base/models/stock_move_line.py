@@ -82,6 +82,11 @@ class StockMoveLine(models.Model):
                             f' por lo cual no se puede finalizar la orden de entrega')
                 if item.move_id.purchase_line_id:
                     standard_price = item.move_id.purchase_line_id.price_unit
+                    if item.move_id.purchase_line_id.currency_id != self.env.company.currency_id:
+                        standard_price = item.move_id.purchase_line_id.currency_id._convert(standard_price,
+                                                                                            self.env.company.currency_id,
+                                                                                            self.env.company,
+                                                                                            item.move_id.purchase_line_id.order_id.date_approve)
             item.write({
                 'product_unit_cost': standard_price,
                 'product_total_cost': standard_price * item.qty_done
@@ -93,7 +98,7 @@ class StockMoveLine(models.Model):
                     'date': date_done
                 })
         return res
-    
+
     @api.model
     def create(self, vals_list):
         if 'product_id' in vals_list.keys():

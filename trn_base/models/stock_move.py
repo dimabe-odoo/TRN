@@ -27,12 +27,15 @@ class StockMove(models.Model):
             total = 0
             for line in self.move_line_ids:
                 if line.analytic_account:
-                    unit_cost = cost / abs(qty)
-                    account_id = credit_account_id if self._is_in() else debit_account_id
-                    line_data = self.get_data(line.qty_done, description, unit_cost, account_id,
-                                              line.analytic_account.id)
-                    res.append((0, 0, line_data))
-                    total += line_data['debit']
+                    try:
+                        unit_cost = cost / abs(qty)
+                        account_id = credit_account_id if self._is_in() else debit_account_id
+                        line_data = self.get_data(line.qty_done, description, unit_cost, account_id,
+                                                  line.analytic_account.id)
+                        res.append((0, 0, line_data))
+                        total += line_data['debit']
+                    except Exception as e:
+                        print(e)
             if res[0][2]['credit'] != total:
                 diff = res[0][2]['credit'] - total
                 line_diff_cost = self.get_data(1, 'Diferencia', account_id=self.env.company.account_diff_id.id if self.env.company.account_diff_id else debit_account_id,

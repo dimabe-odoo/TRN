@@ -112,123 +112,71 @@ class StockPicking(models.Model):
                                 })
 
     def generate_layer_move(self):
-        layer_ids = self.env['stock.valuation.layer'].sudo().search([('company_id.id', '=', self.env.company.id)])
+        layer_ids = self.env['stock.valuation.layer'].sudo().search(
+            [('product_id.categ_id.property_valuation', '=', 'real_time'), ('company_id.id', '=', self.env.company.id)])
         for layer in layer_ids:
-            if layer.quantity < 0:
-                total_layer = abs(layer.value)
-                have_move = False
-                if layer.account_move_id:
-                    if layer.account_move_id.amount_total != layer.value:
-                        layer.account_move_id.button_draft()
-                        layer.account_move_id.line_ids.unlink()
-                        move_id = layer.account_move_id
-                        have_move = True
-                else:
-                    move_id = self.env['account.move'].sudo().create({
-                        'date': layer.create_date.date(),
-                        'journal_id': layer.product_id.categ_id.property_stock_journal.id,
-                        'move_type': 'entry',
-                        'ref': layer.description,
-                        'company_id': self.env.company.id,
-                    })
-                if (layer.account_move_id.amount_total != layer.value and have_move) or not have_move:
-                    line_ids = []
-                    credit_line = {
-                        'credit': total_layer,
-                        'debit': 0,
-                        'account_id': layer.product_id.categ_id.property_stock_account_output_categ_id.id,
-                        'move_id': move_id.id,
-                        'product_id': layer.product_id.id,
-                        'quantity': abs(layer.quantity),
-                        'name': layer.description,
-                    }
-                    line_ids.append(credit_line)
-                    for line in layer.stock_move_id.move_line_ids:
-                        total = self.env.company.currency_id.round(layer.unit_cost * line.qty_done)
-                        debit_line = {
-                            'debit': total,
-                            'credit': 0,
-                            'quantity': line.qty_done,
-                            'account_id': layer.product_id.categ_id.property_stock_account_output_categ_id.id,
-                            'analytic_account_id': line.analytic_account.id,
-                            'move_id': move_id.id,
-                            'product_id': layer.product_id.id,
-                            'name': layer.description,
-                        }
-                        line_ids.append(debit_line)
-                    total_debit = sum(deb['debit'] for deb in line_ids)
-                    diff = abs(total_layer) - total_debit
-                    if diff != 0:
-                        account_id = self.env.company.account_diff_id.id if self.env.company.account_diff_id else layer.product_id.categ_id.property_stock_account_output_categ_id.id
-                        diff_line = {
-                            'account_id': account_id,
-                            'name': 'Diferencia {}'.format(layer.description),
-                            'debit': abs(diff) if diff > 0 else 0,
-                            'credit': abs(diff) if diff < 0 else 0,
-                            'move_id': move_id.id,
-                            'product_id': layer.product_id.id,
-                        }
-                        line_ids.append(diff_line)
-                    self.env['account.move.line'].sudo().create(line_ids)
-                    move_id.action_post()
+            if layer.stock_move_id:
+                if layer.unit_cost > 0:
+                    journal_id, acc_src, acc_dest, acc_valuation = layer.stock_move_id._get_accounting_data_for_valuation()
+                    am_vals = []
                     if not layer.account_move_id:
-                        layer.write({
-                            'account_move_id': move_id.id
+                        move_id = self.env['account.move'].sudo().create({
+                            'date': layer.create_date.date(),
+                            'journal_id': journal_id,
+                            'move_type': 'entry',
+                            'ref': layer.description,
+                            'company_id': self.env.company.id,
                         })
-            if layer.quantity > 0:
-                total_layer = layer.value
-                if layer.account_move_id:
-                    layer.account_move_id.button_draft()
-                    layer.account_move_id.line_ids.unlink()
-                    move_id = layer.account_move_id
-                else:
-                    move_id = self.env['account.move'].sudo().create({
-                        'date': layer.create_date.date(),
-                        'journal_id': layer.product_id.categ_id.property_stock_journal.id,
-                        'move_type': 'entry',
-                        'ref': layer.description,
-                        'company_id': self.env.company.id,
-                    })
-                line_ids = []
-                credit_line = {
-                    'credit': total_layer,
-                    'debit': 0,
-                    'account_id': layer.product_id.categ_id.property_stock_account_input_categ_id.id,
-                    'move_id': move_id.id,
-                    'product_id': layer.product_id.id,
-                    'quantity': abs(layer.quantity),
-                    'name': layer.description,
-                }
-                line_ids.append(credit_line)
-                for line in layer.stock_move_id.move_line_ids:
-                    total = self.env.company.currency_id.round(layer.unit_cost * line.qty_done)
-                    debit_line = {
-                        'debit': total,
-                        'credit': 0,
-                        'quantity': line.qty_done,
-                        'account_id': layer.product_id.categ_id.property_stock_valuation_account_id.id,
-                        'analytic_account_id': line.analytic_account.id,
-                        'move_id': move_id.id,
-                        'product_id': layer.product_id.id,
-                        'name': layer.description,
-                    }
-                    line_ids.append(debit_line)
-                total_debit = sum(deb['debit'] for deb in line_ids)
-                diff = abs(total_layer) - total_debit
-                if diff != 0:
-                    account_id = self.env.company.account_diff_id.id if self.env.company.account_diff_id else layer.product_id.categ_id.property_stock_account_input_categ_id.id
-                    diff_line = {
-                        'account_id': account_id,
-                        'name': 'Diferencia {}'.format(layer.description),
-                        'debit': abs(diff) if diff > 0 else 0,
-                        'credit': abs(diff) if diff < 0 else 0,
-                        'move_id': move_id.id,
-                        'product_id': layer.product_id.id,
-                    }
-                    line_ids.append(diff_line)
-                self.env['account.move.line'].sudo().create(line_ids)
-                move_id.action_post()
-                if not layer.account_move_id:
+                    if layer.account_move_id:
+                        layer.account_move_id.button_draft()
+                        move_id = layer.account_move_id
+                    if layer.stock_move_id._is_in():
+                        if layer.stock_move_id._is_returned(valued_type='in'):
+                            am_vals.append(
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_dest,
+                                                                                                              acc_valuation,
+                                                                                                              journal_id,
+                                                                                                              layer.quantity,
+                                                                                                              layer.description,
+                                                                                                              layer.id,
+                                                                                                              layer.unit_cost))
+                        else:
+                            am_vals.append(
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_src,
+                                                                                                              acc_valuation,
+                                                                                                              journal_id,
+                                                                                                              layer.quantity,
+                                                                                                              layer.description,
+                                                                                                              layer.id,
+                                                                                                              layer.unit_cost))
+
+                        # Create Journal Entry for products leaving the company
+                    if layer.stock_move_id._is_out():
+                        cost = layer.unit_cost
+                        if layer.stock_move_id._is_returned(valued_type='out'):
+                            am_vals.append(
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_valuation,
+                                                                                                              acc_src,
+                                                                                                              journal_id,
+                                                                                                              layer.quantity,
+                                                                                                              layer.description,
+                                                                                                              layer.id,
+                                                                                                              layer.unit_cost))
+                        else:
+                            am_vals.append(
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_valuation,
+                                                                                                              acc_dest,
+                                                                                                              journal_id,
+                                                                                                              layer.quantity,
+                                                                                                              layer.description,
+                                                                                                              layer.id,
+                                                                                                              cost))
+                    line_ids = am_vals[0]['line_ids']
+                    to_create_line = []
+                    for line in line_ids:
+                        line[2]['move_id'] = move_id.id
+                        to_create_line.append(line[2])
+                    self.env['account.move.line'].sudo().create(to_create_line)
                     layer.write({
                         'account_move_id': move_id.id
                     })
