@@ -35,7 +35,7 @@ class StockPicking(models.Model):
                 if move.product_id.standard_price <= 0:
                     if move.purchase_line_id.price_unit <= 0:
                         raise models.UserError(
-                            f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price}, por favor verificar')
+                            f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price} en el pedido {move.purchase_line_id.order_id.name}, por favor verificar')
 
         res = super(StockPicking, self).button_validate()
         # for move in self.move_ids_without_package:
