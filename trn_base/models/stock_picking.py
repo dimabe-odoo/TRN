@@ -38,12 +38,12 @@ class StockPicking(models.Model):
                 if move.product_id.standard_price <= 0 :
                      raise models.UserError(f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price}, por favor verificar')
 
-            res = super(StockPicking, self).button_validate()
+        res = super(StockPicking, self).button_validate()
         # for move in self.move_ids_without_package:
         #     account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
         #     if account_move_id.state == 'draft':
         #         account_move_id.action_post()
-            return res
+        return res
 
     def write(self, vals):
         return super(StockPicking, self).write(vals)
