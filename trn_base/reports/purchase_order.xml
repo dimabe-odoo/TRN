@@ -1,5 +1,375 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <template id="custom_purchase_order_header">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="d">
+                    <div class="container">
+                        <div style="width: 100%;">
+                            <div style="width: 49%; height: 130px; display: inline-block;">
+                                <table style="margin-left: 60px;">
+                                    <tr>
+                                        <td colspan="3" style="text-align: center;">
+                                            <span t-field="res_company.name"
+                                                  style="font-size: 14px;   font-weight: bold;"/>
+                                            <p style="font-size: 10px; "
+                                               t-field="res_company.l10n_cl_activity_description"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 10%;">
+                                            <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)"
+                                                 style="max-width: 100px; max-height: 60px"/>
+                                        </td>
+                                        <td style="width: 80%; font-size: 10px; text-align: center;">
+                                            <span t-field="res_company.partner_id.street"/>
+                                            <br/>
+                                            Mesa Central:
+                                            <span t-field="res_company.phone"/>
+                                            <br/>
+                                            E-mail:
+                                            <span t-field="res_company.email"/>
+                                            <br/>
+                                            <span t-field="res_company.website"/>
+                                        </td>
+                                        <!--                                    <td style="width: 10%;">-->
+                                        <!--                                        <img t-att-src="'data:image/png;base64,%s' % to_text(res_company.certificate_logo)"-->
+                                        <!--                                             style="max-width: 100px; max-height: 60px"/>-->
+                                        <!--                                    </td>-->
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="width: 50%; display: inline-block;">
+                                <table style="border:4px solid; border-color: #ff0000; float: right; width: 60%; height: 120px;">
+                                    <tr>
+                                        <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                            R.U.T.:
+                                            <span style="color:#ff0000;" t-field="res_company.vat"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                            ORDEN DE COMPRA
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:center;color:#ff0000; font-weight: bold;">
+                                            <span t-field="d.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-12 border border-dark rounded" style="font-size:11px;">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>SEÑORES:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-field="d.partner_id.name"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>FECHA:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>DIRECCION:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="text-transform: uppercase;" t-field="d.partner_id.street"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>COTIZACIÓN:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="text-transform: uppercase;" t-esc="d.partner_ref"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>CIUDAD:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="text-transform: uppercase;" t-field="d.partner_id.city_id.name"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>FECHA COT. :</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-esc="d.date_planned"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>RUT:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-field="d.partner_id.vat"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>FONO:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-field="d.partner_id.phone"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>AT. :</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <t t-if="d.partner_id.child_ids and len(d.partner_id.child_ids) > 0">
+                                            <t t-set="have_contact" t-value="False"/>
+                                            <t t-foreach="d.partner_id.child_ids.sorted(key=lambda a: a.create_date)"
+                                               t-as="child">
+                                                <t t-if="child.type == 'contact' and not have_contact">
+                                                    <span style="text-transform: uppercase;" t-field="child.name"/>
+                                                    <t t-set="have_contact" t-value="True"/>
+                                                </t>
+                                            </t>
+                                        </t>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>LUGAR DE ENTREGA :</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-esc="d.picking_type_id.warehouse_id.partner_id.street"/>
+                                        ,
+                                        <span t-field="d.picking_type_id.warehouse_id.partner_id.commune_id"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <strong>MONEDA:</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-esc="d.currency_id.name"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <strong>
+                                            COMPRADOR:
+                                        </strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <span t-field="d.user_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <table class="table table-bordered table-sm border border-dark rounded" style="font-size:11px;">
+                                <tr>
+                                    <th class="border border-dark">
+                                        ITEM
+                                    </th>
+                                    <th class="border border-dark">
+                                        CANTIDAD
+                                    </th>
+                                    <th class="border border-dark">
+                                        UdM
+                                    </th>
+                                    <th class="border border-dark">
+                                        DESCRIPCION
+                                    </th>
+                                    <th class="border border-dark">
+                                        VALOR UNIT.
+                                    </th>
+                                    <th class="border border-dark">
+                                        TOTAL
+                                    </th>
+                                </tr>
+                                <t t-foreach="d.order_line" t-as="line">
+                                    <tr>
+                                        <t t-if="line.display_type">
+                                            <td class="border border-dark">
+                                                <![CDATA[&nbsp;]]>
+                                            </td>
+                                            <td colspan="5" class="border border-dark">
+                                                <p style="padding: 4px">
+                                                    <i>
+                                                        <span t-field="order_product.name"/>
+                                                    </i>
+                                                </p>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td class="border border-dark">
+                                                <span t-esc="line_index + 1"/>
+                                            </td>
+                                            <td class="border border-dark">
+                                                <span t-esc="d.format_qty(line.product_qty)"/>
+                                            </td>
+                                            <td class="border border-dark">
+                                                <span t-field="line.product_uom.name"/>
+                                            </td>
+                                            <td class="border border-dark">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                            <td class="border border-dark">
+                                                <span t-esc="d.format_usd(line.price_unit)"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td class="border border-dark">
+                                                    <span t-esc="d.roundclp(line.price_subtotal)"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td class="border border-dark">
+                                                    <span t-esc="d.format_usd(line.price_subtotal)"/>
+                                                </td>
+                                            </t>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div style="margin-top: 4px; width:100%; min-height:100px; border:1px solid; border-radius: 5px;">
+                                <div style="width:50%; min-height:100px; float:left;padding-top:2px;">
+                                    <table style="font-size:11px; padding: 6px;" cellspacing="0">
+                                        <!--                                <tr>-->
+                                        <!--                                    <th style="text-align: left;">FECHA DE ENTREGA</th>-->
+                                        <!--                                    <td style="width: 5px">:</td>-->
+                                        <!--                                    <td>-->
+                                        <!--                                        <span t-field="d.date_delivered"/>-->
+                                        <!--                                    </td>-->
+                                        <!--                                </tr>-->
+                                        <tr>
+                                            <th style="text-align: left;padding-left: 6px;">COND. DE VENTA</th>
+                                            <td>:</td>
+                                            <td style="text-transform: uppercase;">
+                                                <span t-field="d.payment_term_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align: left;padding-left: 6px;">OBSERVACIÓN</th>
+                                            <td>:</td>
+                                            <td>
+                                                <span t-field="d.notes"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div style="width:48%; float:right;">
+                                    <table style="font-size:11px; padding: 6px;" cellspacing="0">
+                                        <tr>
+                                            <th style="border-right: 1px solid;text-align: left; width: 50%">
+                                                SUBTOTAL
+                                            </th>
+                                            <td style="text-align: left;">
+                                                <span style="margin-left:4px;" t-field="d.currency_id.symbol"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span style="margin-right:4px;"
+                                                          t-esc="d.roundclp(d.amount_untaxed)"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span style="margin-right:4px;"
+                                                          t-esc="d.format_usd(d.amount_untaxed)"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <th style="border-right: 1px solid;text-align: left">
+                                                DESCUENTOS
+                                            </th>
+                                            <td style="text-align: left;">
+                                                <span style="margin-left:4px;" t-esc="d.currency_id.symbol"/>
+                                            </td>
+                                            <td style="text-align: right;width:70%;">
+                                                <span style="margin-right:4px;">0</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th style="border-right: 1px solid;text-align: left;width:30%;">
+                                                NETO
+                                            </th>
+                                            <td style="text-align: left;">
+                                                <span style="margin-left:4px;" t-esc="d.currency_id.symbol"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.roundclp(d.amount_untaxed)"
+                                                          style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.format_usd(d.amount_untaxed)"
+                                                          style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <th style="border-right: 1px solid;text-align: left">
+                                                19% I.V.A
+                                            </th>
+                                            <td style="text-align: left;">
+                                                <span style="margin-left:4px;" t-esc="d.currency_id.symbol"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.roundclp(d.amount_tax)" style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.format_usd(d.amount_tax)" style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <th style="border-right: 1px solid;text-align: left">
+                                                TOTAL ORDEN DE COMPRA
+                                            </th>
+                                            <td style="text-align: left; width:70%;">
+                                                <span style="margin-left:4px;" t-esc="d.currency_id.symbol"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.roundclp(d.amount_total)" style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="text-align: right;width:70%;">
+                                                    <span t-esc="d.format_usd(d.amount_total)"
+                                                          style="margin-right:4px;"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
     <template id="custom_purchase_order">
         <t t-call="web.basic_layout">
             <div class="page">
@@ -172,7 +542,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div style="width:100%;margin:0 auto;height:600px;border:1px solid; border-radius: 5px; margin-top:4px;">
+                    <div style="width:100%;margin:0 auto;height:800px;border:1px solid; border-radius: 5px; margin-top:4px;">
                         <table style="width:100%;font-size:11px;" cellspacing="0">
                             <tr>
                                 <th style="width:8%;border-right:1px solid;border-bottom:1px solid; padding-top: 6px;margin-left: 4px;">
@@ -194,46 +564,52 @@
                                     TOTAL
                                 </th>
                             </tr>
-                            <t t-foreach="d.order_line" t-as="line">
-                                <tr>
-                                    <t t-if="line.display_type">
-                                        <td style="border-bottom:1px solid;"></td>
-                                        <td colspan="5" style="border-bottom:1px solid;text-align:left;">
-                                            <p style="padding: 4px">
-                                                <i>
-                                                    <span t-field="line.name"/>
-                                                </i>
-                                            </p>
-                                        </td>
-                                    </t>
-                                    <t t-else="">
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;">
-                                            <span t-esc="line_index + 1"/>
-                                        </td>
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                            <span t-esc="d.format_qty(line.product_qty)"/>
-                                        </td>
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
-                                            <span t-field="line.product_uom.name"/>
-                                        </td>
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
-                                            <span t-field="line.name"/>
-                                        </td>
-                                        <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                            <span t-esc="d.format_usd(line.price_unit)"/>
-                                        </td>
-                                        <t t-if="d.currency_id == res_company.currency_id">
-                                            <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="d.roundclp(line.price_subtotal)"/>
+                            <t t-foreach="range(len(d.order_line))" t-as="line">
+                                <t t-if="line &lt; 40">
+                                    <t t-set="order_product" t-value="d.order_line[line]"/>
+                                    <tr>
+                                        <t t-if="d.order_line[line].display_type">
+                                            <td style="border-bottom:1px solid;"></td>
+                                            <td colspan="5" style="border-bottom:1px solid;text-align:left;">
+                                                <p style="padding: 4px">
+                                                    <i>
+                                                        <span t-field="order_product.name"/>
+                                                    </i>
+                                                </p>
                                             </td>
                                         </t>
                                         <t t-else="">
-                                            <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
-                                                <span t-esc="d.format_usd(line.price_subtotal)"/>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:center;">
+                                                <span t-esc="line + 1"/>
                                             </td>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                <span t-esc="d.format_qty(order_product.product_qty)"/>
+                                            </td>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
+                                                <span t-field="order_product.product_uom.name"/>
+                                            </td>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:left;padding-right:4px;padding-left:4px;">
+                                                <span t-field="order_product.name"/>
+                                            </td>
+                                            <td style="border-right:1px solid;border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                <span t-esc="d.format_usd(order_product.price_unit)"/>
+                                            </td>
+                                            <t t-if="d.currency_id == res_company.currency_id">
+                                                <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                    <span t-esc="d.roundclp(order_product.price_subtotal)"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td style="border-bottom:1px solid;text-align:right;padding-right:4px;">
+                                                    <span t-esc="d.format_usd(order_product.price_subtotal)"/>
+                                                </td>
+                                            </t>
                                         </t>
-                                    </t>
-                                </tr>
+                                    </tr>
+                                </t>
+                                <t t-else="">
+                                    <div style="page-break-after:break;"></div>
+                                </t>
                             </t>
                         </table>
                     </div>
@@ -360,12 +736,12 @@
     <record id="paper_format_letter_custom" model="report.paperformat">
         <field name="name">Carta Custom</field>
         <field name="default" eval="False"/>
-        <field name="format">A4</field>
+        <field name="format">Letter</field>
         <field name="orientation">Portrait</field>
         <field name="page_height">0</field>
         <field name="page_width">0</field>
         <field name="margin_top">5</field>
-        <field name="margin_bottom">0</field>
+        <field name="margin_bottom">15</field>
         <field name="margin_left">15</field>
         <field name="margin_right">15</field>
         <field name="header_line" eval="False"/>
@@ -374,14 +750,14 @@
     </record>
 
     <record id="purchase.action_report_purchase_order" model="ir.actions.report">
-        <field name="report_name">trn_base.custom_purchase_order</field>
-        <field name="report_file">trn_base.custom_purchase_order</field>
+        <field name="report_name">trn_base.custom_purchase_order_header</field>
+        <field name="report_file">trn_base.custom_purchase_order_header</field>
         <field name="paperformat_id" ref="paper_format_letter_custom"/>
     </record>
 
     <record id="purchase.report_purchase_quotation" model="ir.actions.report">
-        <field name="report_name">trn_base.custom_purchase_order</field>
-        <field name="report_file">trn_base.custom_purchase_order</field>
+        <field name="report_name">trn_base.custom_purchase_order_header</field>
+        <field name="report_file">trn_base.custom_purchase_order_header</field>
         <field name="paperformat_id" ref="paper_format_letter_custom"/>
     </record>
 </odoo>
