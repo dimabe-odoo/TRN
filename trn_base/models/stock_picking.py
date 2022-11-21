@@ -29,15 +29,20 @@ class StockPicking(models.Model):
             item.is_return = False
 
 
-
     def button_validate(self):
         if self.picking_type_id.code == 'incoming':
             for move in self.move_ids_without_package:
                 if not move.purchase_line_id:
                     raise models.UserError('No es posible recepcionar sin orden de compra asociada')
-                if move.product_id.standard_price <= 0 :
-                     raise models.UserError(f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price}, por favor verificar')
+                if move.product_id.standard_price <= 0:
+                    if move.purchase_line_id.price_unit <= 0:
+                        raise models.UserError(
+                            f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price} en el pedido {move.purchase_line_id.order_id.name}, por favor verificar')
         res = super(StockPicking, self).button_validate()
+        # for move in self.move_ids_without_package:
+        #     account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
+        #     if account_move_id.state == 'draft':
+        #         account_move_id.action_post()
         return res
 
 
