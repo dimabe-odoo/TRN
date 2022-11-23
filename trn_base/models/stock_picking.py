@@ -32,9 +32,9 @@ class StockPicking(models.Model):
             for move in self.move_ids_without_package:
                 if not move.purchase_line_id:
                     raise models.UserError('No es posible recepcionar sin orden de compra asociada')
-                if move.product_id.standard_price <= 0 or move.purchase_line_id.price_unit <= 0:
-                        raise models.UserError(
-                            f'El producto {move.product_id.display_name} cuenta con costo {move.purchase_line_id.price_unit} en el pedido {move.purchase_line_id.order_id.name}, por favor verificar')
+                if move.purchase_line_id.price_unit <= 0:
+                    raise models.UserError(
+                        f'El producto {move.product_id.display_name} cuenta con costo {move.purchase_line_id.price_unit} en el pedido {move.purchase_line_id.order_id.name}, por favor verificar')
 
         res = super(StockPicking, self).button_validate()
         # for move in self.move_ids_without_package:
