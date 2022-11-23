@@ -4,7 +4,6 @@ import xlsxwriter
 from datetime import datetime
 
 
-
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
@@ -28,22 +27,22 @@ class StockPicking(models.Model):
             #     # return
             item.is_return = False
 
-
-
     def button_validate(self):
         if self.picking_type_id.code == 'incoming':
             for move in self.move_ids_without_package:
                 if not move.purchase_line_id:
                     raise models.UserError('No es posible recepcionar sin orden de compra asociada')
-                if move.product_id.standard_price <= 0 :
-                     raise models.UserError(f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price}, por favor verificar')
+                if move.product_id.standard_price <= 0:
+                    if move.purchase_line_id.price_unit <= 0:
+                        raise models.UserError(
+                            f'El producto {move.product_id.display_name} cuenta con costo {move.product_id.standard_price} en el pedido {move.purchase_line_id.order_id.name}, por favor verificar')
 
-            res = super(StockPicking, self).button_validate()
+        res = super(StockPicking, self).button_validate()
         # for move in self.move_ids_without_package:
         #     account_move_id = self.env['account.move'].search([('stock_move_id', '=', move.id)])
         #     if account_move_id.state == 'draft':
         #         account_move_id.action_post()
-            return res
+        return res
 
     def write(self, vals):
         return super(StockPicking, self).write(vals)
@@ -164,22 +163,24 @@ class StockPicking(models.Model):
                         cost = layer.unit_cost
                         if layer.stock_move_id._is_returned(valued_type='out'):
                             am_vals.append(
-                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_valuation,
-                                                                                                              acc_src,
-                                                                                                              journal_id,
-                                                                                                              layer.quantity,
-                                                                                                              layer.description,
-                                                                                                              layer.id,
-                                                                                                              layer.unit_cost))
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(
+                                    acc_valuation,
+                                    acc_src,
+                                    journal_id,
+                                    layer.quantity,
+                                    layer.description,
+                                    layer.id,
+                                    layer.unit_cost))
                         else:
                             am_vals.append(
-                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(acc_valuation,
-                                                                                                              acc_dest,
-                                                                                                              journal_id,
-                                                                                                              layer.quantity,
-                                                                                                              layer.description,
-                                                                                                              layer.id,
-                                                                                                              cost))
+                                layer.stock_move_id.with_company(layer.company_id)._prepare_account_move_vals(
+                                    acc_valuation,
+                                    acc_dest,
+                                    journal_id,
+                                    layer.quantity,
+                                    layer.description,
+                                    layer.id,
+                                    cost))
                     line_ids = am_vals[0]['line_ids']
                     to_create_line = []
                     for line in line_ids:
