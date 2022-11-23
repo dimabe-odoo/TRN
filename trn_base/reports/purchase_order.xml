@@ -239,129 +239,141 @@
                     </div>
                     <br/>
 
-                    <div class="row border border-dark" style="font-size:11px;">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-3 pr-1">
-                                    COND. DE VENTA:
-                                </div>
-                                <div class="col-3 text-left pl-0">
-                                    <span t-field="d.payment_term_id.name"/>
-                                </div>
-                                <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
-                                    SUBTOTAL
-                                </div>
-                                <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
-                                    <span t-field="d.currency_id.symbol"/>
-                                </div>
-                                <t t-if="d.currency_id == res_company.currency_id">
-                                    <div class="col-2 text-right">
-                                        <span t-esc="d.roundclp(d.amount_untaxed)"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="col-2 text-right">
-                                        <span style="margin-right:4px;"
-                                              t-esc="d.format_usd(d.amount_untaxed)"/>
-                                    </div>
-                                </t>
 
+                </div>
+
+                <div class="footer text-right ">
+                    <div class="row border border-dark last-page" style="font-size:11px;">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-3 pr-1">
+                                COND. DE VENTA:
                             </div>
-                            <div class="row">
-                                <div class="col-3 pr-1">
-                                    OBSERVACION:
-                                </div>
-                                <div class="col-3 text-left pl-0">
-                                    <span t-field="d.notes"/>
-                                </div>
-                                <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
-                                    DESCUENTOS
-                                </div>
-                                <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
-                                    <span t-field="d.currency_id.symbol"/>
-                                </div>
+                            <div class="col-3 text-left pl-0">
+                                <span t-field="d.payment_term_id.name"/>
+                            </div>
+                            <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
+                                SUBTOTAL
+                            </div>
+                            <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
+                                <span t-field="d.currency_id.symbol"/>
+                            </div>
+                            <t t-if="d.currency_id == res_company.currency_id">
                                 <div class="col-2 text-right">
-                                    0
+                                    <span t-esc="d.roundclp(d.amount_untaxed)"/>
                                 </div>
+                            </t>
+                            <t t-else="">
+                                <div class="col-2 text-right">
+                                    <span style="margin-right:4px;"
+                                          t-esc="d.format_usd(d.amount_untaxed)"/>
+                                </div>
+                            </t>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-3 pr-1">
+                                OBSERVACION:
                             </div>
-                            <div class="row">
-                                <div class="col-6 pr-1">
-
-                                </div>
-                                <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
-                                    NETO
-                                </div>
-                                <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
-                                    <span t-field="d.currency_id.symbol"/>
-                                </div>
-                                <t t-if="d.currency_id == res_company.currency_id">
-                                    <div class="col-2 text-right">
-                                        <span t-esc="d.roundclp(d.amount_untaxed)"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="col-2 text-right">
-                                        <span style="margin-right:4px;"
-                                              t-esc="d.format_usd(d.amount_untaxed)"/>
-                                    </div>
-                                </t>
-
+                            <div class="col-3 text-left pl-0">
+                                <span t-field="d.notes"/>
                             </div>
-                            <div class="row">
-                                <div class="col-6 pr-1">
-
-                                </div>
-                                <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
-                                    19% I.V.A
-                                </div>
-                                <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
-                                    <span t-field="d.currency_id.symbol"/>
-                                </div>
-                                <t t-if="d.currency_id == res_company.currency_id">
-                                    <div class="col-2 text-right">
-                                        <span t-esc="d.roundclp(d.amount_tax)"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="col-2 text-right">
-                                        <span style="margin-right:4px;"
-                                              t-esc="d.format_usd(d.amount_tax)"/>
-                                    </div>
-                                </t>
+                            <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
+                                DESCUENTOS
+                            </div>
+                            <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
+                                <span t-field="d.currency_id.symbol"/>
+                            </div>
+                            <div class="col-2 text-right">
+                                0
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 pr-1">
 
                             </div>
-                            <div class="row">
-                                <div class="col-6 pr-1">
-
-                                </div>
-                                <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
-                                    TOTAL ORDEN DE COMPRA
-                                </div>
-                                <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
-                                    <span t-field="d.currency_id.symbol"/>
-                                </div>
-                                <t t-if="d.currency_id == res_company.currency_id">
-                                    <div class="col-2 text-right">
-                                        <span t-esc="d.roundclp(d.amount_total)"/>
-                                    </div>
-                                </t>
-                                <t t-else="">
-                                    <div class="col-2 text-right">
-                                        <span style="margin-right:4px;"
-                                              t-esc="d.format_usd(d.amount_total)"/>
-                                    </div>
-                                </t>
+                            <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
+                                NETO
                             </div>
+                            <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
+                                <span t-field="d.currency_id.symbol"/>
+                            </div>
+                            <t t-if="d.currency_id == res_company.currency_id">
+                                <div class="col-2 text-right">
+                                    <span t-esc="d.roundclp(d.amount_untaxed)"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="col-2 text-right">
+                                    <span style="margin-right:4px;"
+                                          t-esc="d.format_usd(d.amount_untaxed)"/>
+                                </div>
+                            </t>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6 pr-1">
+
+                            </div>
+                            <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
+                                19% I.V.A
+                            </div>
+                            <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
+                                <span t-field="d.currency_id.symbol"/>
+                            </div>
+                            <t t-if="d.currency_id == res_company.currency_id">
+                                <div class="col-2 text-right">
+                                    <span t-esc="d.roundclp(d.amount_tax)"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="col-2 text-right">
+                                    <span style="margin-right:4px;"
+                                          t-esc="d.format_usd(d.amount_tax)"/>
+                                </div>
+                            </t>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-6 pr-1">
+
+                            </div>
+                            <div class="col-3 border border-dark border-left-0 border-bottom-0 border-top-0 border-right-1">
+                                TOTAL ORDEN DE COMPRA
+                            </div>
+                            <div class="pl-1 col-1 border border-dark border-left-1 border-bottom-0 border-top-0 border-right-0">
+                                <span t-field="d.currency_id.symbol"/>
+                            </div>
+                            <t t-if="d.currency_id == res_company.currency_id">
+                                <div class="col-2 text-right">
+                                    <span t-esc="d.roundclp(d.amount_total)"/>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="col-2 text-right">
+                                    <span style="margin-right:4px;"
+                                          t-esc="d.format_usd(d.amount_total)"/>
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </div>
-                <div class="footer text-right">
                     <span class="page"/>
                     /
                     <span class="topage"/>
                 </div>
             </t>
         </t>
+    </template>
+
+    <template id="report_minimal_layout" inherit_id="web.minimal_layout">
+        <xpath expr="//head" position="inside">
+            <script src='/trn_base/static/js/pagination_hide.js'></script>
+        </xpath>
+
+        <xpath expr="//body" position="attributes">
+            <attribute t-translation="off" name="onload">subst(); pagination_hide();</attribute>
+        </xpath>
     </template>
 
     <record id="paper_format_letter_custom_purchase_order" model="report.paperformat">
@@ -372,7 +384,7 @@
         <field name="page_height">0</field>
         <field name="page_width">0</field>
         <field name="margin_top">55</field>
-        <field name="margin_bottom">20</field>
+        <field name="margin_bottom">40</field>
         <field name="margin_left">15</field>
         <field name="margin_right">15</field>
         <field name="header_line" eval="False"/>
