@@ -22,7 +22,7 @@ class StockMoveLine(models.Model):
     product_stock_qty = fields.Float('Stock Disponible', compute='compute_product_stock_qty')
     stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
-    employee_id = fields.Many2one('hr.employee', string="Retirado por")
+    contact_id = fields.Many2one('res.partner', string="Retirado por")
     category_id = fields.Many2one('product.category', string='Categoria')
     notes = fields.Html('Observacion')
 

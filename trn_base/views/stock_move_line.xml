@@ -16,7 +16,7 @@
                            attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}"/>
                     <field name="stock_product_lot_ids" optional="show" invisible="1"/>
                     <field name="product_stock_qty" optional="show"/>
-                    <field name="employee_id"/>
+                    <field name="contact_id" domain="[('is_company','=',False)]"/>
                 </xpath>
                 <xpath expr="//field[@name='lot_name']" position="attributes">
                     <attribute name="readonly">1</attribute>

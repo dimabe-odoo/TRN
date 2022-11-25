@@ -3,4 +3,7 @@
     <record id="purchase_report_only" model="res.groups">
         <field name="name">Reporteria Compra</field>
     </record>
+    <record id="analytic.group_analytic_accounting" model="res.groups">
+        <field name="users" eval="[(6, 0, [ref('base.user_admin')])]"/>
+    </record>
 </odoo>
