@@ -83,6 +83,13 @@ class StockMoveLine(models.Model):
                 if item.move_id.purchase_line_id:
                     standard_price = item.move_id.purchase_line_id.price_unit
                     if item.move_id.purchase_line_id.currency_id != self.env.company.currency_id:
+                        date = fields.Date.to_string(item.move_id.purchase_line_id.order_id.date_approve.date())
+                        rate = self.env['res.currency.rate'].sudo().search(
+                            [('currency_id.id', '=', item.move_id.purchase_line_id.currency_id.id),
+                             ('name', '=', date), ('company_id.id','=', self.env.company.id)])
+                        if not rate:
+                            raise models.ValidationError(
+                                f'No existe tasa de cambio para la moneda {item.move_id.purchase_line_id.currency_id.name} en la fecha {date}.\nPor favor comunicarse con el administrador')
                         standard_price = item.move_id.purchase_line_id.currency_id._convert(standard_price,
                                                                                             self.env.company.currency_id,
                                                                                             self.env.company,
