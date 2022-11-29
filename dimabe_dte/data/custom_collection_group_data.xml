@@ -1,10 +1,10 @@
 <odoo>
-        <record id="custom_noti_remaining_caf_group_data" model="custom.collection.group">
-            <field name="name">Grupo Notificación CAF Disponibles</field>
-            <field name="group_id" ref="dimabe_dte.custom_remaining_caf_notification"/>
-        </record>
-        <record id="custom_noti_claimed_dte" model="custom.collection.group">
-            <field name="name">Grupo Notificacion Reclamo DTE</field>
-            <field name="group_id" ref="dimabe_dte.custom_change_status_notification"/>
-        </record>
+    <record id="custom_noti_remaining_caf_group_data" model="custom.collection.group">
+        <field name="name">Grupo Notificación CAF Disponibles</field>
+        <field name="group_id" ref="dimabe_dte.custom_remaining_caf_notification_group"/>
+    </record>
+    <record id="custom_noti_claimed_dte" model="custom.collection.group">
+        <field name="name">Grupo Notificacion Reclamo DTE</field>
+        <field name="group_id" ref="dimabe_dte.custom_change_status_notification_group"/>
+    </record>
 </odoo>
