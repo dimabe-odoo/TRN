@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="group_administration_view" model="ir.ui.view">
+        <field name="name">Administracion de Grupos</field>
+        <field name="model">group.administration</field>
+        <field name="arch" type="xml">
+            <form string="Administracion de Grupos">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nombre"/>
+                        </h1>
+                        <label for="group_id"/>
+                        <h3>
+                            <field name="group_id" placeholder="Grupo"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <field name="user_ids" context="{'is_admin': True}">
+                            <tree>
+                                <field name="display_name"/>
+                                <field name="login"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="group_administration_act_window" model="ir.actions.act_window">
+        <field name="name">Administracion de Grupos</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">group.administration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'is_admin': True}</field>
+    </record>
+
+    <menuitem name="Administracion de Grupos" id="group_administration_menuitem" parent="base.menu_administration"
+              action="group_administration_act_window"/>
+</odoo>

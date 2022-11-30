@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="custom_templates" model="res.groups">
+    <record id="custom_templates_group" model="res.groups">
         <field name="name">Plantillas Personalizadas</field>
     </record>
-    <record id="custom_remaining_caf_notification" model="res.groups">
+    <record id="custom_remaining_caf_notification_group" model="res.groups">
         <field name="name">Notificación CAF Disponibles</field>
     </record>
-    <record id="custom_change_status_notification" model="res.groups">
+    <record id="custom_change_status_notification_group" model="res.groups">
         <field name="name">Notificacion de Reclamo</field>
     </record>
 </odoo>
