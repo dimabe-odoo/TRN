@@ -1,0 +1,4 @@
+[submodule "l10n_cl_rrhh"]
+	path = l10n_cl_rrhh
+	url = git@github.com:fabiandroguettdimabe/l10n_cl_rrhh.git
+	branch = v15
