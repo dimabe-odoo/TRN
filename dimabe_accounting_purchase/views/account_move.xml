@@ -43,16 +43,17 @@
     <record id="view_move_form_po_inherit" model="ir.ui.view">
         <field name="name">Formulario de OC</field>
         <field name="model">account.move</field>
+        <field name="priority" eval="15"/>
         <field name="inherit_id" ref="purchase.view_move_form_inherit_purchase"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <field name="purchase_tmp_id" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='purchase_vendor_bill_id']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|','&amp;', ('state','!=','draft'), ('move_type', '!=', 'in_invoice'),('purchase_tmp_id','!=',False)]}</attribute>
+                <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//label[@for='purchase_vendor_bill_id']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|','&amp;', ('state','!=','draft'), ('move_type', '!=', 'in_invoice'),('purchase_tmp_id','!=',False)]}</attribute>
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>

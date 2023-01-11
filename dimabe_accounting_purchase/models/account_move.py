@@ -30,7 +30,7 @@ class AccountMove(models.Model):
                     oc = oc.replace('O', '0')
                     oc = re.sub(r'[^\w]', ' ', oc).strip()
                     purchase_id = self.env['purchase.order'].sudo().search([
-                        ('name', '=', oc)])
+                        ('name', '=', oc), ('company_id', '=', item.company_id.id)])
                     if purchase_id:
                         # if len(purchase_id.order_line.filtered(
                         #         lambda x: x.display_type not in ['line_section', 'line_note'])) == 1:
@@ -56,8 +56,10 @@ class AccountMove(models.Model):
                                 rate = self.env['res.currency.rate'].sudo().search(
                                     [('name', '=', date_order), ('currency_id', '=', purchase_id.currency_id.id)])
                                 if rate:
-                                    unit_price = purchase_id.currency_id._convert(unit_price, self.env.company.currency_id,
-                                                                                  self.env.company, item.date, round=False)
+                                    unit_price = purchase_id.currency_id._convert(unit_price,
+                                                                                  self.env.company.currency_id,
+                                                                                  self.env.company, item.date,
+                                                                                  round=False)
                                     price_subtotal = self.env.company.currency_id.round(
                                         unit_price * p_line.product_uom_qty)
                             to_create.append({
