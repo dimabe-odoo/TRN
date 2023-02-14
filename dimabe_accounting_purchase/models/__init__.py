@@ -2,3 +2,4 @@
 
 from . import account_move
 from . import account_purchase_line
+from . import stock_picking
