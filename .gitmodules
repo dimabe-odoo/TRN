@@ -1,0 +1,4 @@
+[submodule "dimabe-odoo/purchase_order_flow_validation"]
+	path = dimabe-odoo/purchase_order_flow_validation
+	url = git@github.com:dimabe-odoo/purchase_order_flow_validation.git
+	branch = v15
