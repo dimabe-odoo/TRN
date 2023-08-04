@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="stock_warehouse_users_form_inherit" model="ir.ui.view">
+            <field name="name">Formulario de Bodega</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='technical_info']" position="before">
+                    <page string="Usuarios" name="users">
+                        <field name="user_ids">
+
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
