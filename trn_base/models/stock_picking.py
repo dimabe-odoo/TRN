@@ -16,6 +16,17 @@ class StockPicking(models.Model):
     delayed_picking = fields.Boolean('Operacion en diferido', copy=False,
                                      help="Habilitar ingreso manual para fecha efectiva de la operación")
 
+    location_ids = fields.Many2many('stock.location', compute='compute_location_ids', store=True)
+
+    @api.depends('picking_type_id')
+    def compute_location_ids(self):
+        for item in self:
+            if item.picking_type_id:
+                item.location_ids = self.env['stock.location'].sudo().search(
+                    [('location_id', '=', item.picking_type_id.warehouse_id.view_location_id.id)])
+                return
+            item.location_ids = None
+
     @api.depends('location_id', 'location_dest_id')
     def compute_is_return(self):
         for item in self:
