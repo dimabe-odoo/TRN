@@ -13,3 +13,4 @@ from . import account_move_line
 from . import product_product
 from . import res_partner
 from . import stock_valuation_layer
+from . import stock_warehouse
