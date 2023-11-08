@@ -38,7 +38,8 @@
         'wizards/stock_return_picking.xml',
         'views/stock_valuation_layer.xml',
         'data/ir_action_window.xml',
-        'views/stock_warehouse.xml'
+        'views/stock_warehouse.xml',
+        'wizards/product_last_wizard.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
