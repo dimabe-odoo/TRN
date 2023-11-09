@@ -40,6 +40,7 @@
         'data/ir_action_window.xml',
         'views/stock_warehouse.xml',
         'wizards/product_last_wizard.xml',
+        'wizards/stock_move_line_history_wizard.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

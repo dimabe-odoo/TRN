@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_move_line_history_wizard_form" model="ir.ui.view">
+            <field name="name">Informe de valorización de inventario por bodega</field>
+            <field name="model">stock.move.line.history.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="col-12">
+                        <group>
+                            <field name="location_ids" widget="many2many_tags"/>
+                            <field name="date"/>
+                        </group>
+                    </div>
+                    <footer>
+                        <button type="object" class="oe_highlight" name="generate_report" string="Generar Reporte"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_report_stock_move_line_history" model="ir.actions.act_window">
+            <field name="name">Informe de valorización de inventario por bodega</field>
+            <field name="res_model">stock.move.line.history.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock_move_line_history_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem name="Informe de valorización de inventario por bodega" parent="stock.menu_warehouse_report"
+                  action="action_report_stock_move_line_history"  id="report_stock_move_line_history_wizard_menuitem"/>
+    </data>
+</odoo>
