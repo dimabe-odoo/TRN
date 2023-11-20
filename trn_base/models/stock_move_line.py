@@ -117,7 +117,6 @@ class StockMoveLine(models.Model):
         if 'picking_id' in vals_list.keys():
             picking_id = self.env['stock.picking'].sudo().search([('id', '=', vals_list['picking_id'])])
             product_id = self.env['product.product'].sudo().search([('id', '=', vals_list['product_id'])])
-            '''
             if picking_id.picking_type_id.code == 'incoming' and product_id.product_tmpl_id.tracking == 'lot':
                 last_lot_id = get_last_lot()
                 if last_lot_id:
@@ -129,7 +128,7 @@ class StockMoveLine(models.Model):
                     })
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
-                '''
+
         res = super(StockMoveLine, self).create(vals_list)
         if res.picking_id.picking_type_id.code == 'incoming':
             if res.move_id:
