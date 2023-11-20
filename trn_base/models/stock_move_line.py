@@ -20,7 +20,7 @@ class StockMoveLine(models.Model):
     supplier_lot = fields.Char('Lote Proveedor')
     is_tracking_lot = fields.Boolean('Tiene Seguimiento por Lote?', compute="compute_is_tracking_lot")
     product_stock_qty = fields.Float('Stock Disponible', compute='compute_product_stock_qty')
-    #stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
+    stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
     contact_id = fields.Many2one('res.partner', string="Retirado por")
     category_id = fields.Many2one('product.category', string='Categoria')
@@ -31,7 +31,6 @@ class StockMoveLine(models.Model):
         for item in self:
             item.product_requested_uom_id = item.product_id.uom_id
 
-    '''
     @api.depends('product_id', 'location_id', 'lot_id')
     def compute_stock_product_lot_ids(self):
         for item in self:
@@ -41,10 +40,11 @@ class StockMoveLine(models.Model):
                     quant_ids = item.product_id.stock_quant_ids.filtered(
                         lambda x: x.location_id.id == location_id.id and x.quantity > 0)
                     item.stock_product_lot_ids = quant_ids.mapped('lot_id')
-                    return
-            item.stock_product_lot_ids = None
-            return
-    '''
+                else:
+                    item.stock_product_lot_ids = None
+            else:
+                item.stock_product_lot_ids = None
+
 
     @api.depends('product_id', 'location_id', 'lot_id')
     def compute_product_stock_qty(self):
@@ -53,16 +53,14 @@ class StockMoveLine(models.Model):
             if item.product_id:
                 if len(item.product_id.stock_quant_ids) == 0:
                     item.product_stock_qty = 0
-                    return
-                quant_ids = item.product_id.stock_quant_ids.filtered(lambda x: x.location_id.id == location_id.id)
-                item.product_stock_qty = sum(quant.quantity for quant in quant_ids)
-                #if item.product_id.product_tmpl_id.tracking == 'lot' and item.lot_id:
-                #    quant_lot_ids = quant_ids.filtered(lambda x: x.lot_id.id == item.lot_id.id)
-                #    item.product_stock_qty = sum(quant.quantity for quant in quant_lot_ids)
-                #    return
-                return
-            item.product_stock_qty = 0
-            return
+                else:
+                    quant_ids = item.product_id.stock_quant_ids.filtered(lambda x: x.location_id.id == location_id.id)
+                    item.product_stock_qty = sum(quant.quantity for quant in quant_ids)
+                    if item.product_id.tracking == 'lot' and item.lot_id:
+                        quant_lot_ids = quant_ids.filtered(lambda x: x.lot_id.id == item.lot_id.id)
+                        item.product_stock_qty = sum(quant.quantity for quant in quant_lot_ids)
+            else:
+                item.product_stock_qty = 0
 
     def _action_done(self):
         for item in self:

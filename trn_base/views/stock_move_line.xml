@@ -14,16 +14,16 @@
                            attrs="{'required': [('picking_code','=','outgoing')],'invisible': [('picking_code','!=','outgoing')]}"/>
                     <field name="supplier_lot" optional="show"
                            attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}"/>
-                    <!--<field name="stock_product_lot_ids" optional="show" invisible="1"/>-->
+                    <field name="stock_product_lot_ids" optional="show" invisible="1"/>
                     <field name="product_stock_qty" optional="show"/>
                     <field name="contact_id" domain="[('is_company','=',False)]"/>
                 </xpath>
                 <xpath expr="//field[@name='lot_name']" position="attributes">
                     <attribute name="readonly">1</attribute>
                 </xpath>
-                <!--<xpath expr="//field[@name='lot_id']" position="attributes">
+                <xpath expr="//field[@name='lot_id']" position="attributes">
                     <attribute name="domain">[('id','in',stock_product_lot_ids)]</attribute>
-                </xpath>-->
+                </xpath>
             </field>
         </record>
         <record id="view_stock_move_line_detailed_operation_barcode_inherit" model="ir.ui.view">
