@@ -35,7 +35,7 @@ class StockMoveLine(models.Model):
     def compute_stock_product_lot_ids(self):
         for item in self:
             if item.product_id:
-                if item.product_id.tracking == 'lot':
+                if item.product_id.product_tmpl_id.tracking == 'lot':
                     location_id = item.location_dest_id if item.picking_type_id.code == 'incoming' else item.location_id
                     quant_ids = item.product_id.stock_quant_ids.filtered(
                         lambda x: x.location_id.id == location_id.id and x.quantity > 0)
