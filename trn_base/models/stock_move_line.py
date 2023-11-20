@@ -20,7 +20,7 @@ class StockMoveLine(models.Model):
     supplier_lot = fields.Char('Lote Proveedor')
     is_tracking_lot = fields.Boolean('Tiene Seguimiento por Lote?', compute="compute_is_tracking_lot")
     product_stock_qty = fields.Float('Stock Disponible', compute='compute_product_stock_qty')
-    stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
+    #stock_product_lot_ids = fields.Many2many('stock.production.lot', compute='compute_stock_product_lot_ids')
     is_return_line = fields.Boolean('Es Movimiento de devolución', related='picking_id.is_return')
     contact_id = fields.Many2one('res.partner', string="Retirado por")
     category_id = fields.Many2one('product.category', string='Categoria')
@@ -31,6 +31,7 @@ class StockMoveLine(models.Model):
         for item in self:
             item.product_requested_uom_id = item.product_id.uom_id
 
+    '''
     @api.depends('product_id', 'location_id', 'lot_id')
     def compute_stock_product_lot_ids(self):
         for item in self:
@@ -43,6 +44,7 @@ class StockMoveLine(models.Model):
                     return
             item.stock_product_lot_ids = None
             return
+    '''
 
     @api.depends('product_id', 'location_id', 'lot_id')
     def compute_product_stock_qty(self):
