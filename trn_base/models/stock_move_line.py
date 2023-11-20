@@ -62,6 +62,7 @@ class StockMoveLine(models.Model):
                 #    return
                 return
             item.product_stock_qty = 0
+            return
 
     def _action_done(self):
         for item in self:
