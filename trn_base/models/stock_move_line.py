@@ -56,10 +56,10 @@ class StockMoveLine(models.Model):
                     return
                 quant_ids = item.product_id.stock_quant_ids.filtered(lambda x: x.location_id.id == location_id.id)
                 item.product_stock_qty = sum(quant.quantity for quant in quant_ids)
-                if item.product_id.product_tmpl_id.tracking == 'lot' and item.lot_id:
-                    quant_lot_ids = quant_ids.filtered(lambda x: x.lot_id.id == item.lot_id.id)
-                    item.product_stock_qty = sum(quant.quantity for quant in quant_lot_ids)
-                    return
+                #if item.product_id.product_tmpl_id.tracking == 'lot' and item.lot_id:
+                #    quant_lot_ids = quant_ids.filtered(lambda x: x.lot_id.id == item.lot_id.id)
+                #    item.product_stock_qty = sum(quant.quantity for quant in quant_lot_ids)
+                #    return
                 return
             item.product_stock_qty = 0
 
@@ -118,6 +118,7 @@ class StockMoveLine(models.Model):
         if 'picking_id' in vals_list.keys():
             picking_id = self.env['stock.picking'].sudo().search([('id', '=', vals_list['picking_id'])])
             product_id = self.env['product.product'].sudo().search([('id', '=', vals_list['product_id'])])
+            '''
             if picking_id.picking_type_id.code == 'incoming' and product_id.product_tmpl_id.tracking == 'lot':
                 last_lot_id = get_last_lot()
                 if last_lot_id:
@@ -129,6 +130,7 @@ class StockMoveLine(models.Model):
                     })
                     vals_list['lot_id'] = lot_id.id
                     vals_list['lot_name'] = lot_id.name
+                '''
         res = super(StockMoveLine, self).create(vals_list)
         if res.picking_id.picking_type_id.code == 'incoming':
             if res.move_id:
