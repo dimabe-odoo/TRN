@@ -74,4 +74,3 @@ class AccountMove(models.Model):
                             })
                         self.env['account.purchase.line'].sudo().create(
                             to_create)
-                        return

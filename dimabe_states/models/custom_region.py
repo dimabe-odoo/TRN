@@ -1,6 +1,5 @@
 import json
 
-from gevent.resolver.cares import result
 from odoo import fields, models, api
 import requests
 import urllib3

@@ -24,7 +24,6 @@ class StockPicking(models.Model):
             if item.picking_type_id:
                 item.location_ids = self.env['stock.location'].sudo().search(
                     [('location_id', '=', item.picking_type_id.warehouse_id.view_location_id.id)])
-                return
             item.location_ids = None
 
     @api.depends('location_id', 'location_dest_id')

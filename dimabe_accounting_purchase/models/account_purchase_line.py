@@ -34,7 +34,6 @@ class AccountPurchaseLine(models.Model):
             item.line_qty = item.purchase_line_id.qty_invoiced
             if item.line_id:
                 item.line_price_unit = item.line_id.price_unit
-                return
             item.line_price_unit = 0
 
     def associate_line(self):
