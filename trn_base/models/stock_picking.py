@@ -21,10 +21,11 @@ class StockPicking(models.Model):
     @api.depends('picking_type_id')
     def compute_location_ids(self):
         for item in self:
+            item.location_ids = None
             if item.picking_type_id:
                 item.location_ids = self.env['stock.location'].sudo().search(
                     [('location_id', '=', item.picking_type_id.warehouse_id.view_location_id.id)])
-            item.location_ids = None
+            
 
     @api.depends('location_id', 'location_dest_id')
     def compute_is_return(self):
